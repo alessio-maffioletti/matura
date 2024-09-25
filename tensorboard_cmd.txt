@@ -1,0 +1,7 @@
+launch command; launch in anaconda powershell
+python C:\Users\aless\anaconda3\Lib\site-packages\tensorboard\main.py --logdir=H:\aless\Documents\Python_Scripts\Matur\mnist\logs
+
+url: http://localhost:6006/
+
+remove files
+Get-ChildItem -Path "H:\aless\Documents\Python_Scripts\Matur\mnist\logs" | Remove-Item -Recurse -Force
