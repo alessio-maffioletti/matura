@@ -30,6 +30,6 @@ class sect1:
     def compile(self):
         self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
 
-    def load_weights(self, path=r'H:\aless\Documents\Python_Scripts\Matur\mnist\training_1\sect\model_epoch_09.weights.h5'):
+    def load_weights(self, path):
         self.model.load_weights(path)
     
