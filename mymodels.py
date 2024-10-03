@@ -73,5 +73,5 @@ class sect1():
         return self.model.evaluate(X, y)    
     
     def predict(self, input):
-        return self.model.predict(input)
+        return self.model.predict(input, verbose=0)
     
