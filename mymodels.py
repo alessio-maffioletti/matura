@@ -11,7 +11,8 @@ class sect1():
         # Create the model
         self.model = models.Sequential()
         # Add convolutional layers
-        self.model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
+        self.model.add(layers.Input(input_shape))
+        self.model.add(layers.Conv2D(32, (3, 3), activation='relu'))
         self.model.add(layers.MaxPooling2D((2, 2)))
         self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
         self.model.add(layers.MaxPooling2D((2, 2)))
@@ -45,14 +46,16 @@ class sect1():
         if not params:
             params = default_params
 
-        callbacks = [d for d in [params['tensorboard'], params['cp_callback']] if d]
-
+        callbacks = []
         if params['tensorboard']:
             tensorboard_callback = TensorBoard(log_dir=logs_folder)
+            callbacks.append(tensorboard_callback)
 
         if params['tensorboard']:
             # Create a callback that saves the model's weights
             cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(checkpoints_folder, 'model_epoch_{epoch:02d}.weights.h5'), save_weights_only=True, verbose=1)
+            callbacks.append(cp_callback)
+        
 
         model_run = self.model.fit(
             X,y,
@@ -62,4 +65,13 @@ class sect1():
             callbacks=callbacks,
         )
         return model_run
+    
+    def evaluate(self, X, y, weight_path):
+        if os.path.exists(weight_path):
+            self.model.load_weights(weight_path)
+            
+        return self.model.evaluate(X, y)    
+    
+    def predict(self, input):
+        return self.model.predict(input)
     
