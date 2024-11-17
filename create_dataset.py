@@ -71,7 +71,7 @@ def create_dataset(list_img, list_labels, n_images=100):
     
     X = np.array(X)
     coords = np.array([coords_x, coords_y]).T
-    #y = np.array(y)
+    X = X.reshape(X.shape[0], 128, 128, 1)
 
     return X, coords, labels
 
