@@ -47,37 +47,61 @@ class sect1():
     def load_weights(self, path):
         self.model.load_weights(path)
 
-    def train(self, X, y, X_val, y_val, params, logs_folder, checkpoints_folder):
+
+    def train(self, train_dataset, val_dataset, params, logs_folder, checkpoints_folder):
+        """
+        Train the model using provided datasets and parameters.
+
+        Parameters:
+            train_dataset (tf.data.Dataset): Training dataset.
+            val_dataset (tf.data.Dataset): Validation dataset.
+            params (dict): Training parameters (epochs, batch size, etc.).
+            logs_folder (str): Folder path for saving TensorBoard logs.
+            checkpoints_folder (str): Folder path for saving model checkpoints.
+
+        Returns:
+            model_run (History): Training history object.
+        """
+        # Default parameters
         default_params = {
             'epochs': 10,
             'batch_size': 512,
             'tensorboard': True,
             'cp_callback': True
         }
-
+        
+        # Merge provided params with defaults
         if not params:
             params = default_params
+        else:
+            for key, value in default_params.items():
+                params.setdefault(key, value)
 
+        # Initialize callbacks
         callbacks = [SingleLineProgressBar()]
         if params['tensorboard']:
             tensorboard_callback = TensorBoard(log_dir=logs_folder)
             callbacks.append(tensorboard_callback)
 
-        if params['tensorboard']:
-            # Create a callback that saves the model's weights
-            cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(checkpoints_folder, self.name + '_epoch_{epoch:02d}.weights.h5'), save_weights_only=True, verbose=0)
+        if params['cp_callback']:
+            # Create a callback for saving model weights
+            cp_callback = tf.keras.callbacks.ModelCheckpoint(
+                filepath=os.path.join(checkpoints_folder, f"{self.name}_epoch_{{epoch:02d}}.weights.h5"),
+                save_weights_only=True,
+                verbose=0
+            )
             callbacks.append(cp_callback)
-        
 
+        # Train the model
         model_run = self.model.fit(
-            X,y,
-            epochs = params['epochs'],
-            batch_size = params['batch_size'],
-            validation_data=(X_val, y_val),
+            train_dataset,
+            epochs=params['epochs'],
+            validation_data=val_dataset,
             callbacks=callbacks,
             verbose=0
         )
         return model_run
+
     
     def evaluate(self, X, y, weight_path):
         if os.path.exists(weight_path):

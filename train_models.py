@@ -2,6 +2,32 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import mymodels
+import tensorflow as tf
+from tensorflow.keras.backend import clear_session
+
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+clear_session()
+
+
+def create_tf_data(X, y, batch_size=512, shuffle=False):
+        """
+        Converts NumPy arrays to a tf.data.Dataset.
+        
+        Parameters:
+            X (np.array): Input features.
+            y (np.array): Labels.
+            batch_size (int): Batch size for training.
+            shuffle (bool): Whether to shuffle the data.
+            
+        Returns:
+            tf.data.Dataset: Batched and preprocessed dataset.
+        """
+        # Create a tf.data.Dataset from numpy arrays
+        dataset = tf.data.Dataset.from_tensor_slices((X, y))
+        #dataset = dataset.shuffle(buffer_size=10000).batch(32).prefetch(buffer_size=tf.data.AUTOTUNE)
+        #dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
+        
+        return dataset
 
 class models:
     def __init__(self):
@@ -11,11 +37,16 @@ class models:
         self.logs_folder = self.main_folder + 'logs/'
 
     def initialise_data_and_model(self):
+        clear_session()
+
         self.X = np.load(self.dataset_folder + '/X_cropped.npy')
         self.y = np.load(self.dataset_folder + '/y_train.npy')
 
         self.X_test = np.load(self.dataset_folder + '/X_cropped.npy')
         self.y_test = np.load(self.dataset_folder + '/y_train.npy')
+
+        self.train_dataset = create_tf_data(self.X, self.y)
+        self.val_dataset = create_tf_data(self.X_test, self.y_test)
 
         self.model = mymodels.sect2()
         self.model.compile()
@@ -26,7 +57,7 @@ class models:
                     'batch_size': 1024, 
                     'tensorboard': True, 
                     'cp_callback': True}
-        self.run = self.model.train(self.X, self.y, self.X_test, self.y_test, params, self.logs_folder, self.checkpoints_folder)
+        self.run = self.model.train(self.train_dataset, self.val_dataset, params, self.logs_folder, self.checkpoints_folder)
 
     def plot(self):
 
@@ -44,7 +75,7 @@ class models:
             label="Valdation set",
         )
         plt.xlabel("epochs")
-        plt.ylabel("accuracy")
+        plt.ylabel(list(history_model)[0])
         plt.show()
         
     def eval_random(self):
@@ -69,11 +100,16 @@ class sect1(models):
         self.checkpoints_folder = self.main_folder + 'checkpoints/'
 
     def initialise_data_and_model(self):
+        clear_session()
+
         self.X = np.load(self.dataset_folder + '/X_train_canvas.npy')
         self.y = np.load(self.dataset_folder + '/coords.npy')
 
         self.X_test = np.load(self.dataset_folder + '/X_test_canvas.npy')
         self.y_test = np.load(self.dataset_folder + '/coords_test.npy')
+
+        self.train_dataset = create_tf_data(self.X, self.y)
+        self.val_dataset = create_tf_data(self.X_test, self.y_test)
 
         self.model = mymodels.sect1()
         self.model.compile()
@@ -90,6 +126,9 @@ class single(models):
 
         self.X_test = np.load(self.dataset_folder + '/X_test_canvas.npy')
         self.y_test = np.load(self.dataset_folder + '/y_test.npy')
+
+        self.train_dataset = create_tf_data(self.X, self.y)
+        self.val_dataset = create_tf_data(self.X_test, self.y_test)
 
         self.model = mymodels.single()
         self.model.compile()
