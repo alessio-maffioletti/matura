@@ -92,12 +92,12 @@ def serialize_example_image_label(image, label):
     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
     return example_proto.SerializeToString()
 
-def serialize_example_coords_label(coords, label):
-    """Convert coordinates and label to a tf.train.Example."""
+def serialize_example_image_coords(image, coords):
+    """Convert an image and its coordinates to a tf.train.Example."""
     feature = {
+        'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.encode_jpeg(image).numpy()])),
         'coords_x': tf.train.Feature(int64_list=tf.train.Int64List(value=[coords[0]])),
-        'coords_y': tf.train.Feature(int64_list=tf.train.Int64List(value=[coords[1]])),
-        'label': tf.train.Feature(int64_list=tf.train.Int64List(value=label))
+        'coords_y': tf.train.Feature(int64_list=tf.train.Int64List(value=[coords[1]]))
     }
     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
     return example_proto.SerializeToString()
@@ -117,8 +117,8 @@ y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
 y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
 
 # Save training and testing data to separate TFRecord files
-save_to_tfrecord(X_train_canvas, y_train_onehot[:1000], 'train_images_labels.tfrecord', serialize_example_image_label)
-save_to_tfrecord(coords, y_train_onehot[:1000], 'train_coords_labels.tfrecord', serialize_example_coords_label)
+save_to_tfrecord(X_train_canvas, y_train_onehot, 'train_image_label.tfrecord', serialize_example_image_label)
+save_to_tfrecord(X_train_canvas, coords, 'train_image_coords.tfrecord', serialize_example_image_coords)
 
-save_to_tfrecord(X_test_canvas, y_test_onehot[:1000], 'test_images_labels.tfrecord', serialize_example_image_label)
-save_to_tfrecord(coords_test, y_test_onehot[:1000], 'test_coords_labels.tfrecord', serialize_example_coords_label)
+save_to_tfrecord(X_test_canvas, y_test_onehot, 'test_image_label.tfrecord', serialize_example_image_label)
+save_to_tfrecord(X_test_canvas, coords_test, 'test_image_coords.tfrecord', serialize_example_image_coords)

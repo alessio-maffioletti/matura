@@ -10,24 +10,52 @@ clear_session()
 
 
 
-def parse_tfrecord(example):
+def parse_tfrecord(example, dataset_type='image_label'):
     """Parse a single example from the TFRecord file."""
-    feature_description = {
-        'image': tf.io.FixedLenFeature([], tf.string),  # The image as a byte string
-        'label': tf.io.FixedLenFeature([10], tf.int64)  # The label (one-hot encoded)
-    }
+    # Define feature description based on dataset type
+    if dataset_type == 'image_label':
+        feature_description = {
+            'image': tf.io.FixedLenFeature([], tf.string),  # The image as a byte string
+            'label': tf.io.FixedLenFeature([10], tf.int64)  # The label (one-hot encoded)
+        }
+    elif dataset_type == 'image_coords':
+        feature_description = {
+            'image': tf.io.FixedLenFeature([], tf.string),  # The image as a byte string
+            'coords_x': tf.io.FixedLenFeature([1], tf.int64),  # x-coordinate
+            'coords_y': tf.io.FixedLenFeature([1], tf.int64)   # y-coordinate
+        }
+    
+    # Parse the example according to the feature description
     example = tf.io.parse_single_example(example, feature_description)
-    image = tf.io.decode_jpeg(example['image'], channels=1)  # Decode the image
-    label = example['label']
+    
+    # Decode the image
+    image = tf.io.decode_jpeg(example['image'], channels=1)
     image = tf.cast(image, tf.float32) / 255.0  # Normalize image
-    return image, label
-def load_tfrecord(filename, batch_size=32):
+    
+    if dataset_type == 'image_label':
+        label = example['label']
+        return image, label
+    elif dataset_type == 'image_coords':
+        coords = tf.stack([example['coords_x'], example['coords_y']], axis=-1)  # Stack coords into (x, y)
+        return image, coords
+
+
+def load_tfrecord(filename, batch_size=32, dataset_type='image_label'):
     """Load data from a TFRecord file and return a batched dataset."""
+    # Load the TFRecord file
     dataset = tf.data.TFRecordDataset(filename)
-    dataset = dataset.map(parse_tfrecord)  # Parse the data
-    dataset = dataset.batch(batch_size)  # Batch the data
-    dataset = dataset.prefetch(tf.data.AUTOTUNE)  # Improve performance by prefetching
+    
+    # Parse the data according to the dataset type
+    dataset = dataset.map(lambda x: parse_tfrecord(x, dataset_type))
+    
+    # Batch the data
+    dataset = dataset.batch(batch_size)
+    
+    # Prefetch the data for improved performance
+    dataset = dataset.prefetch(tf.data.AUTOTUNE)
+    
     return dataset
+
 
 
 
@@ -54,8 +82,8 @@ def create_tf_data(X, y, batch_size=512, shuffle=False):
 
 class models:
     def __init__(self):
-        self.main_folder = '../'
-        #self.main_folder = './'
+        self.main_folder = '../'   #main use
+        #self.main_folder = './'     #for debugging
         self.dataset_folder = self.main_folder + 'dataset2/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_sect2/'
         self.logs_folder = self.main_folder + 'logs/'
@@ -138,20 +166,14 @@ class sect2(models):
 class sect1(models):
     def __init__(self):
         super().__init__()
-        self.dataset_folder = self.main_folder + 'dataset_tfrecord_small/'
+        self.dataset_folder = self.main_folder + 'dataset_tfrecord/'
         self.checkpoints_folder = self.main_folder + 'checkpoints/'
 
     def initialise_data_and_model(self):
         clear_session()
 
-        self.X = np.load(self.dataset_folder + '/X_train_canvas.npy')
-        self.y = np.load(self.dataset_folder + '/coords.npy')
-
-        self.X_test = np.load(self.dataset_folder + '/X_test_canvas.npy')
-        self.y_test = np.load(self.dataset_folder + '/coords_test.npy')
-
-        self.train_dataset = create_tf_data(self.X, self.y)
-        self.val_dataset = create_tf_data(self.X_test, self.y_test)
+        self.train_dataset = load_tfrecord(self.dataset_folder + '/train_image_coords.tfrecord', batch_size=64, dataset_type='image_coords')
+        self.val_dataset = load_tfrecord(self.dataset_folder + '/test_image_coords.tfrecord', batch_size=64, dataset_type='image_coords')
 
         self.model = mymodels.sect1()
         self.model.compile()
@@ -164,8 +186,8 @@ class single(models):
 
     def initialise_data_and_model(self):
         """Initialize the data and model."""
-        self.train_dataset = load_tfrecord(self.dataset_folder + '/train_images_labels.tfrecord', batch_size=32)
-        self.val_dataset = load_tfrecord(self.dataset_folder + '/test_images_labels.tfrecord', batch_size=32)
+        self.train_dataset = load_tfrecord(self.dataset_folder + '/train_image_label.tfrecord', batch_size=64, dataset_type='image_label')
+        self.val_dataset = load_tfrecord(self.dataset_folder + '/test_image_label.tfrecord', batch_size=64, dataset_type='image_label')
 
         # Initialize the model
         self.model = mymodels.single()

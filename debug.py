@@ -1,6 +1,3 @@
-from train_models import single, sect1, sect2
+import gc
 
-net = single()
-net.initialise_data_and_model()
-
-net.train()
+gc.collect()
