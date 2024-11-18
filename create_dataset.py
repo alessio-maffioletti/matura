@@ -61,22 +61,22 @@ def create_dataset(list_img, list_labels, n_images=100):
         image = list_img[i]
         # Create a canvas with the image placed randomly
         canvas, (x, y) = place_image_on_canvas(image, width=128, height=128)
-        canvas_norm = canvas / 255
+        canvas = canvas.reshape(128, 128, 1)
         #flat_canvas = canvas_norm.flatten()
         # Add the canvas to the dataset
-        X.append(canvas_norm)
+        X.append(canvas)
         labels.append(list_labels[i])
         coords_x.append(x)
         coords_y.append(y)
     
     X = np.array(X)
     coords = np.array([coords_x, coords_y]).T
-    X = X.reshape(X.shape[0], 128, 128, 1)
+    #X = X.reshape(X.shape[0], 128, 128, 1)
 
     return X, coords, labels
 
-X_train_canvas, coords, y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0])
-X_test_canvas, coords_test, y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0])
+X_train_canvas, coords, y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0]) #X_train.shape[0]
+X_test_canvas, coords_test, y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0]) #X_test.shape[0]
 
 y_train_onehot = utils.to_categorical(y_train, num_classes=10)
 y_test_onehot = utils.to_categorical(y_test, num_classes=10)

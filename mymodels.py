@@ -133,16 +133,17 @@ class sect2(sect1):
 
 
 class single(sect1):
-    def __init__(self, input_shape=(128, 128, 1)):
+    def __init__(self, input_shape=(128, 128)):
         self.name = "single"
 
         self.model = models.Sequential()
-        self.model.add(layers.Input(input_shape))
-        self.model.add(layers.Conv2D(32, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-
+        self.model.add(layers.Input(shape=(128,128,1)))
         self.model.add(layers.Flatten())
 
+        self.model.add(layers.Dense(128, activation='relu'))
+        self.model.add(layers.Dropout(0.5))
+        self.model.add(layers.Dense(128, activation='relu'))
+        self.model.add(layers.Dropout(0.5))
         self.model.add(layers.Dense(128, activation='relu'))
         self.model.add(layers.Dropout(0.5))
 
