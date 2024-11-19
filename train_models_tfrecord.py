@@ -167,13 +167,13 @@ class sect1(models):
     def __init__(self):
         super().__init__()
         self.dataset_folder = self.main_folder + 'dataset_tfrecord/'
-        self.checkpoints_folder = self.main_folder + 'checkpoints/'
+        self.checkpoints_folder = self.main_folder + 'checkpoints_sect1/'
 
     def initialise_data_and_model(self):
         clear_session()
 
-        self.train_dataset = load_tfrecord(self.dataset_folder + '/train_image_coords.tfrecord', batch_size=64, dataset_type='image_coords')
-        self.val_dataset = load_tfrecord(self.dataset_folder + '/test_image_coords.tfrecord', batch_size=64, dataset_type='image_coords')
+        self.train_dataset = load_tfrecord(self.dataset_folder + '/train_image_coords.tfrecord', batch_size=128, dataset_type='image_coords')
+        self.val_dataset = load_tfrecord(self.dataset_folder + '/test_image_coords.tfrecord', batch_size=128, dataset_type='image_coords')
 
         self.model = mymodels.sect1()
         self.model.compile()
@@ -182,7 +182,7 @@ class single(models):
     def __init__(self):
         super().__init__()
         self.dataset_folder = self.main_folder + 'dataset_tfrecord/'
-        self.checkpoints_folder = self.main_folder + 'checkpoints/'
+        self.checkpoints_folder = self.main_folder + 'checkpoints_single/'
 
     def initialise_data_and_model(self):
         """Initialize the data and model."""

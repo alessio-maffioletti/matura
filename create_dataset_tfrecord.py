@@ -117,8 +117,8 @@ y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
 y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
 
 # Save training and testing data to separate TFRecord files
-save_to_tfrecord(X_train_canvas, y_train_onehot, 'train_image_label.tfrecord', serialize_example_image_label)
-save_to_tfrecord(X_train_canvas, coords, 'train_image_coords.tfrecord', serialize_example_image_coords)
+save_to_tfrecord(X_train_canvas, y_train_onehot, 'numpy_train_image_label.tfrecord', serialize_example_image_label)
+save_to_tfrecord(X_train_canvas, coords, 'numpy_train_image_coords.tfrecord', serialize_example_image_coords)
 
-save_to_tfrecord(X_test_canvas, y_test_onehot, 'test_image_label.tfrecord', serialize_example_image_label)
-save_to_tfrecord(X_test_canvas, coords_test, 'test_image_coords.tfrecord', serialize_example_image_coords)
+save_to_tfrecord(X_test_canvas, y_test_onehot, 'numpy_test_image_label.tfrecord', serialize_example_image_label)
+save_to_tfrecord(X_test_canvas, coords_test, 'numpy_test_image_coords.tfrecord', serialize_example_image_coords)
