@@ -3,6 +3,7 @@ import numpy as np
 import seaborn as sns
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras import utils
+from sklearn.preprocessing import MinMaxScaler
 
 
 
@@ -83,7 +84,7 @@ y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
 
 import tensorflow as tf
 
-def serialize_example(image, label):
+def serialize_example_image_label(image, label):
     """Convert an image and its label to a tf.train.Example."""
     feature = {
         'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.encode_jpeg(image).numpy()])),
@@ -92,13 +93,38 @@ def serialize_example(image, label):
     example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
     return example_proto.SerializeToString()
 
-def save_to_tfrecord(X, y, filename):
-    """Save images and labels to a TFRecord file."""
+def serialize_example_image_coords(image, coords):
+    """Convert an image and its coordinates to a tf.train.Example."""
+    feature = {
+        'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.encode_jpeg(image).numpy()])),
+        'coords_x': tf.train.Feature(float_list=tf.train.FloatList(value=[coords[0]])),
+        'coords_y': tf.train.Feature(float_list=tf.train.FloatList(value=[coords[1]]))
+    }
+    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+    return example_proto.SerializeToString()
+
+def save_to_tfrecord(X, y, filename, serialize_fn):
+    """Save data to a TFRecord file using the provided serialize function."""
     with tf.io.TFRecordWriter(filename) as writer:
-        for image, label in zip(X, y):
-            tf_example = serialize_example(image, label)
+        for data, label in zip(X, y):
+            tf_example = serialize_fn(data, label)
             writer.write(tf_example)
 
-# Save training and testing data
-save_to_tfrecord(X_train_canvas, y_train_onehot, 'train_dataset.tfrecord')
-save_to_tfrecord(X_test_canvas, y_test_onehot, 'test_dataset.tfrecord')
+
+X_train_canvas, coords, y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0])
+X_test_canvas, coords_test, y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0])
+
+scaler = MinMaxScaler()
+
+coords = scaler.fit_transform(coords)
+coords_test = scaler.fit_transform(coords_test)
+
+y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
+y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
+
+# Save training and testing data to separate TFRecord files
+save_to_tfrecord(X_train_canvas, y_train_onehot, 'train_image_label.tfrecord', serialize_example_image_label)
+save_to_tfrecord(X_train_canvas, coords, 'train_image_coords.tfrecord', serialize_example_image_coords)
+
+save_to_tfrecord(X_test_canvas, y_test_onehot, 'test_image_label.tfrecord', serialize_example_image_label)
+save_to_tfrecord(X_test_canvas, coords_test, 'test_image_coords.tfrecord', serialize_example_image_coords)

@@ -17,21 +17,14 @@ powershell_command = 'Get-ChildItem -Path "H:\\aless\\Documents\\Python_Scripts\
 
 class SingleLineProgressBar(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
-        if logs is None:
-            logs = {}
-        
-        # Start with epoch information
-        progress_message = f"\rEpoch {epoch + 1}/{self.params['epochs']} - "
-        
-        # Add all available metrics dynamically
-        metrics = [f"{key}: {logs[key]:.4f}" for key in logs.keys() if key != 'batch']
-        progress_message += " - ".join(metrics)
-        
+        progress_message = (
+            f"\rEpoch {epoch + 1}/{self.params['epochs']} - "
+            f"loss: {logs['loss']:.4f} - val_loss: {logs.get('val_loss', 'N/A'):.4f}"
+        )
         print(progress_message, end='')  # Print on the same line
 
     def on_train_end(self, logs=None):
         print()  # Move to the next line after training ends
-
 
 class sect1():
     def __init__(self, input_shape=(128, 128, 1)):
@@ -40,7 +33,6 @@ class sect1():
         self.model = models.Sequential()
         # Add convolutional layers
         self.model.add(layers.Input(input_shape))
-
         self.model.add(layers.Conv2D(32, (3, 3), activation='relu'))
         self.model.add(layers.MaxPooling2D((2, 2)))
         self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
@@ -59,20 +51,14 @@ class sect1():
         self.model.add(layers.Dense(2))  # Output layer with 2 neurons (x and y)
     
     def compile(self):
-        lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-            initial_learning_rate=0.001,
-            decay_steps=100000,
-            decay_rate=1)
-        optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
-
         self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
-        #print(self.model.summary())
+        print(self.model.summary())
 
     def load_weights(self, path):
         self.model.load_weights(path)
 
 
-    def train(self, train_dataset, val_dataset, params, logs_folder, checkpoints_folder):
+    def train(self, X_train, y_train, X_val, y_val, params, logs_folder, checkpoints_folder):
         """
         Train the model using provided datasets and parameters.
 
@@ -129,11 +115,12 @@ class sect1():
 
         # Train the model
         model_run = self.model.fit(
-            train_dataset,
+            X_train,
+            y_train,
             epochs=params['epochs'],
-            validation_data=val_dataset,
+            validation_data=(X_val, y_val),
             callbacks=callbacks,
-            verbose=0
+            verbose=1
         )
         return model_run
 
@@ -150,32 +137,21 @@ class sect1():
 class sect2(sect1):
     def __init__(self, input_shape=(42, 42, 1)):
         self.name = "sect2"
-        
+
         self.model = models.Sequential()
-
         self.model.add(layers.Input(input_shape))
-
-        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-        self.model.add(layers.Conv2D(128, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-        self.model.add(layers.Conv2D(256, (3, 3), activation='relu'))
+        self.model.add(layers.Conv2D(32, (3, 3), activation='relu'))
         self.model.add(layers.MaxPooling2D((2, 2)))
 
-        # Flatten the output of the last convolutional layer
         self.model.add(layers.Flatten())
 
-        # Add fully connected (dense) layers
-        self.model.add(layers.Dense(512, activation='relu'))
-        self.model.add(layers.Dropout(0.5))
-        self.model.add(layers.Dense(256, activation='relu'))
+        self.model.add(layers.Dense(128, activation='relu'))
         self.model.add(layers.Dropout(0.5))
 
         self.model.add(layers.Dense(10, activation='softmax'))
 
     def compile(self):
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-        print(self.model.summary())
 
 
 class single(sect1):

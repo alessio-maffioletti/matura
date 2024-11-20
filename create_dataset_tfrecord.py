@@ -3,6 +3,11 @@ import numpy as np
 import seaborn as sns
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras import utils
+from sklearn.preprocessing import MinMaxScaler
+import tensorflow as tf
+
+#tf.config.set_visible_devices([], 'GPU')
+
 
 
 
@@ -75,50 +80,53 @@ def create_dataset(list_img, list_labels, n_images=100):
 
     return X, coords, labels
 
-X_train_canvas, coords, y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0]) #X_train.shape[0]
-X_test_canvas, coords_test, y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0]) #X_test.shape[0]
 
-y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
-y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
+def write(X, filename, batch_size=69):
+    serialized = tf.io.serialize_tensor(X)
+    record_file = filename
 
-import tensorflow as tf
+    with tf.io.TFRecordWriter(record_file) as writer:
+        writer.write(serialized.numpy())
 
-def serialize_example_image_label(image, label):
-    """Convert an image and its label to a tf.train.Example."""
-    feature = {
-        'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.encode_jpeg(image).numpy()])),
-        'label': tf.train.Feature(int64_list=tf.train.Int64List(value=label))
-    }
-    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-    return example_proto.SerializeToString()
+def write_in_batches(data, filename, batch_size=100):
+    #print(data.shape)
+    record_file = filename
+    with tf.io.TFRecordWriter(record_file) as writer:
+        # Iterate through the dataset in batches
+        for i in range(0, len(data), batch_size):
+            # Check if this batch is a full batch
+            if i + batch_size <= len(data):
+                batch = data[i:i + batch_size]
+                serialized = tf.io.serialize_tensor(batch)
+                writer.write(serialized.numpy())
 
-def serialize_example_image_coords(image, coords):
-    """Convert an image and its coordinates to a tf.train.Example."""
-    feature = {
-        'image': tf.train.Feature(bytes_list=tf.train.BytesList(value=[tf.io.encode_jpeg(image).numpy()])),
-        'coords_x': tf.train.Feature(int64_list=tf.train.Int64List(value=[coords[0]])),
-        'coords_y': tf.train.Feature(int64_list=tf.train.Int64List(value=[coords[1]]))
-    }
-    example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-    return example_proto.SerializeToString()
+class notebook:
+    def get_data(self):
+        self.X_train_canvas, self.coords, self.y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0])
+        self.X_test_canvas, self.coords_test, self.y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0])
 
-def save_to_tfrecord(X, y, filename, serialize_fn):
-    """Save data to a TFRecord file using the provided serialize function."""
-    with tf.io.TFRecordWriter(filename) as writer:
-        for data, label in zip(X, y):
-            tf_example = serialize_fn(data, label)
-            writer.write(tf_example)
+        #scaler = MinMaxScaler()
 
+        #self.coords = scaler.fit_transform(coords)
+        #self.coords_test = scaler.fit_transform(coords_test)
 
-X_train_canvas, coords, y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0])
-X_test_canvas, coords_test, y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0])
+        self.y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
+        self.y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
 
-y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
-y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
+        #print(self.X_train_canvas.shape, self.coords.shape, self.y_train_onehot.shape, self.X_test_canvas.shape, self.coords_test.shape, self.y_test_onehot.shape)
 
-# Save training and testing data to separate TFRecord files
-save_to_tfrecord(X_train_canvas, y_train_onehot, 'numpy_train_image_label.tfrecord', serialize_example_image_label)
-save_to_tfrecord(X_train_canvas, coords, 'numpy_train_image_coords.tfrecord', serialize_example_image_coords)
+        return self.X_train_canvas, self.coords, self.y_train_onehot, self.X_test_canvas, self.coords_test, self.y_test_onehot
+    
+    def save_data(self):
+        write_in_batches(self.X_train_canvas[:1000], 'train_image.tfrecord', batch_size=128)
+        write_in_batches(self.coords[:1000], 'train_coords.tfrecord', batch_size=128)
+        write_in_batches(self.y_train_onehot[:1000], 'train_label.tfrecord', batch_size=128)
 
-save_to_tfrecord(X_test_canvas, y_test_onehot, 'numpy_test_image_label.tfrecord', serialize_example_image_label)
-save_to_tfrecord(X_test_canvas, coords_test, 'numpy_test_image_coords.tfrecord', serialize_example_image_coords)
+        write_in_batches(self.X_test_canvas[:1000], 'test_image.tfrecord', batch_size=128)
+        write_in_batches(self.coords_test[:1000], 'test_coords.tfrecord', batch_size=128)
+        write_in_batches(self.y_test_onehot[:1000], 'test_label.tfrecord', batch_size=128)
+
+if __name__ == '__main__':
+    nt = notebook()
+    X_train_canvas, coords, y_train_onehot, X_test_canvas, coords_test, y_test_onehot = nt.get_data()
+    nt.save_data()

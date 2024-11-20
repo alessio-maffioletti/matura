@@ -8,7 +8,7 @@ from tensorflow.keras import utils
 
 # Loading the train and test data from the MNIST dataset
 
-(X_train, y_train), (X_test, y_test) = mnist.load_data()
+(X_train_mnist, y_train_mnist), (X_test_mnist, y_test_mnist) = mnist.load_data()
 
 def place_image_on_canvas(image, width=1200, height=1200):
     """
@@ -61,6 +61,7 @@ def create_dataset(list_img, list_labels, n_images=100):
         image = list_img[i]
         # Create a canvas with the image placed randomly
         canvas, (x, y) = place_image_on_canvas(image, width=128, height=128)
+        canvas = canvas / 255
         canvas = canvas.reshape(128, 128, 1)
         #flat_canvas = canvas_norm.flatten()
         # Add the canvas to the dataset
@@ -75,12 +76,17 @@ def create_dataset(list_img, list_labels, n_images=100):
 
     return X, coords, labels
 
-X_train_canvas, coords, y_train = create_dataset(X_train, y_train, n_images=X_train.shape[0]) #X_train.shape[0]
-X_test_canvas, coords_test, y_test = create_dataset(X_test, y_test, n_images=X_test.shape[0]) #X_test.shape[0]
+class notebook:
+    def get_data(save=False):
+        X_train_canvas, coords, y_train = create_dataset(X_train_mnist, y_train_mnist, n_images=X_train_mnist.shape[0]) #X_train.shape[0]
+        X_test_canvas, coords_test, y_test = create_dataset(X_test_mnist, y_test_mnist, n_images=X_test_mnist.shape[0]) #X_test.shape[0]
 
-y_train_onehot = utils.to_categorical(y_train, num_classes=10)
-y_test_onehot = utils.to_categorical(y_test, num_classes=10)
+        y_train_onehot = utils.to_categorical(y_train, num_classes=10)
+        y_test_onehot = utils.to_categorical(y_test, num_classes=10)
 
+        return X_train_canvas[:1000], coords[:1000], y_train_onehot[:1000], X_test_canvas[:1000], coords_test[:1000], y_test_onehot[:1000]
+
+'''
 np.save('X_train_canvas.npy', X_train_canvas)
 np.save('coords.npy', coords)
 np.save('y_train.npy', y_train_onehot)
@@ -88,6 +94,5 @@ np.save('y_train.npy', y_train_onehot)
 np.save('X_test_canvas.npy', X_test_canvas)
 np.save('coords_test.npy', coords_test)
 np.save('y_test.npy', y_test_onehot)
-
 #plt.imshow(X_train_canvas[23].reshape(128, 128))
-#plt.show()
+#plt.show()'''
