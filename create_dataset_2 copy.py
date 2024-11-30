@@ -123,10 +123,10 @@ model.compile()
 model.load_weights(weights)
 
 X_train = load_tfrecord(dataset_folder + 'train_image.tfrecord', dataset_type=tf.double)
-#y = load_tfrecord(dataset_folder + 'train_label.tfrecord', dataset_type=tf.int64)
+y = load_tfrecord(dataset_folder + 'train_label.tfrecord', dataset_type=tf.int64)
 
 X_test = load_tfrecord(dataset_folder + 'test_image.tfrecord', dataset_type=tf.double)
-#y_test = load_tfrecord(dataset_folder + 'test_label.tfrecord', dataset_type=tf.int64)
+y_test = load_tfrecord(dataset_folder + 'test_label.tfrecord', dataset_type=tf.int64)
 
 #write_and_crop_in_batches(X_train, 'train_image_cropped.tfrecord', batch_size=128)
 #write_and_crop_in_batches(X_test, 'test_image_cropped.tfrecord', batch_size=128)

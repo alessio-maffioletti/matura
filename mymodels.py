@@ -32,7 +32,28 @@ class SingleLineProgressBar(tf.keras.callbacks.Callback):
     def on_train_end(self, logs=None):
         print()  # Move to the next line after training ends
 
-
+class debug_model():
+    def __init__(self):
+        self.model = models.Sequential()
+        self.model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(42, 42, 1)))
+        self.model.add(layers.MaxPooling2D((2, 2)))
+        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        self.model.add(layers.MaxPooling2D((2, 2)))
+        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        self.model.add(layers.Flatten())
+        self.model.add(layers.Dense(64, activation='relu'))
+        self.model.add(layers.Dense(10, activation='softmax'))
+        self.model.summary()
+        self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
+    
+    def train(self, train_dataset, val_dataset):
+        model_run = self.model.fit(
+            train_dataset,
+            epochs=20,
+            validation_data=val_dataset,
+            verbose=1
+        )
+        return model_run
 class sect1():
     def __init__(self, input_shape=(128, 128, 1)):
         self.name = "sect1"
@@ -66,10 +87,11 @@ class sect1():
         optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
 
         self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
-        #print(self.model.summary())
+        print(self.model.summary())
 
     def load_weights(self, path):
         self.model.load_weights(path)
+
 
 
     def train(self, train_dataset, val_dataset, params, logs_folder, checkpoints_folder):
@@ -136,13 +158,23 @@ class sect1():
             verbose=0
         )
         return model_run
-
     
-    def evaluate(self, X, y, weight_path):
+    def train_min(self, train_dataset, val_dataset):
+        model_run = self.model.fit(
+        train_dataset,
+        epochs=20,
+        validation_data=val_dataset,
+        verbose=1
+        )
+        return model_run
+    
+    def evaluate(self, dataset, weight_path):
         if os.path.exists(weight_path):
             self.model.load_weights(weight_path)
-            
-        return self.model.evaluate(X, y)    
+
+        predictions = self.model.predict(dataset, verbose=1)
+
+        return predictions 
     
     def predict(self, input):
         return self.model.predict(input, verbose=0)
@@ -176,7 +208,6 @@ class sect2(sect1):
     def compile(self):
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         print(self.model.summary())
-
 
 class single(sect1):
     def __init__(self, input_shape=(128, 128,1)):

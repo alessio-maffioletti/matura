@@ -69,13 +69,15 @@ def create_dataset(list_img, list_labels, n_images=100):
         canvas = canvas.reshape(128, 128, 1)
         #flat_canvas = canvas_norm.flatten()
         # Add the canvas to the dataset
+        np_labels = np.array(list_labels[i], dtype=np.int64)
         X.append(canvas)
-        labels.append(list_labels[i])
+        labels.append(np_labels)
         coords_x.append(x)
         coords_y.append(y)
     
     X = np.array(X)
     coords = np.array([coords_x, coords_y]).T
+    labels = np.array(labels)
     #X = X.reshape(X.shape[0], 128, 128, 1)
 
     return X, coords, labels
@@ -110,23 +112,23 @@ class notebook:
         #self.coords = scaler.fit_transform(coords)
         #self.coords_test = scaler.fit_transform(coords_test)
 
-        self.y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
-        self.y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
+        #self.y_train_onehot = utils.to_categorical(y_train, num_classes=10).astype(np.int64)
+        #self.y_test_onehot = utils.to_categorical(y_test, num_classes=10).astype(np.int64)
 
         #print(self.X_train_canvas.shape, self.coords.shape, self.y_train_onehot.shape, self.X_test_canvas.shape, self.coords_test.shape, self.y_test_onehot.shape)
 
-        return self.X_train_canvas, self.coords, self.y_train_onehot, self.X_test_canvas, self.coords_test, self.y_test_onehot
+        return self.X_train_canvas, self.coords, self.y_train, self.X_test_canvas, self.coords_test, self.y_test
     
     def save_data(self):
         write_in_batches(self.X_train_canvas[:1000], 'train_image.tfrecord', batch_size=128)
         write_in_batches(self.coords[:1000], 'train_coords.tfrecord', batch_size=128)
-        write_in_batches(self.y_train_onehot[:1000], 'train_label.tfrecord', batch_size=128)
+        write_in_batches(self.y_train[:1000], 'train_label.tfrecord', batch_size=128)
 
         write_in_batches(self.X_test_canvas[:1000], 'test_image.tfrecord', batch_size=128)
         write_in_batches(self.coords_test[:1000], 'test_coords.tfrecord', batch_size=128)
-        write_in_batches(self.y_test_onehot[:1000], 'test_label.tfrecord', batch_size=128)
+        write_in_batches(self.y_test[:1000], 'test_label.tfrecord', batch_size=128)
 
 if __name__ == '__main__':
     nt = notebook()
-    X_train_canvas, coords, y_train_onehot, X_test_canvas, coords_test, y_test_onehot = nt.get_data()
+    nt.get_data()
     nt.save_data()

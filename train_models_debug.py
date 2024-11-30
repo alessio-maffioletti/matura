@@ -27,17 +27,10 @@ def make_tf_dataset(X, y):
     dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
     return dataset
 
-def debug_make_tf_dataset(X, y):
-    features = zip(*X)
-    labels = zip(*y)
-    dataset = tf.data.Dataset.from_tensor_slices((list(features), list(labels)))
-    dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-    return dataset 
-
 class models:
     def __init__(self):
-        self.main_folder = '../'   #main use
-        #self.main_folder = './'     #for debugging
+        #self.main_folder = '../'   #main use
+        self.main_folder = './'     #for debugging
         self.dataset_folder = self.main_folder + 'dataset2/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_sect2/'
         self.logs_folder = self.main_folder + 'logs/'
@@ -126,17 +119,47 @@ class sect2(models):
         clear_session()
 
         self.X = load_tfrecord(self.dataset_folder + 'train_image_cropped.tfrecord', dataset_type=tf.double)
-        self.y = load_tfrecord(self.dataset_folder + 'train_label.tfrecord', dataset_type=tf.int64)
+        self.y = load_tfrecord(self.dataset_folder + 'train_label.tfrecord', dataset_type=tf.float32)
 
         self.X_test = load_tfrecord(self.dataset_folder + 'test_image_cropped.tfrecord', dataset_type=tf.double)
-        self.y_test = load_tfrecord(self.dataset_folder + 'test_label.tfrecord', dataset_type=tf.int64)
+        self.y_test = load_tfrecord(self.dataset_folder + 'test_label.tfrecord', dataset_type=tf.float32)
 
-        self.train_dataset = debug_make_tf_dataset(self.X, self.y)
-        self.val_dataset = debug_make_tf_dataset(self.X_test, self.y_test)
+        self.train_dataset = make_tf_dataset(self.X, self.y)
+        self.val_dataset = make_tf_dataset(self.X_test, self.y_test)
 
 
         self.model = mymodels.sect2()
         self.model.compile()
+
+    def train_debug(self):
+        # Create dummy input data with shape (batch_size, height, width, channels)
+        input_data = tf.random.normal((128, 42, 42, 1))
+
+        test_model = mymodels.sect2().model
+        
+        # Get the model output
+        x = test_model(input_data)
+        
+        # Debug: Check the shape of the output tensor
+        tf.debugging.assert_shapes([(x, (128, 42, 42, 1))])  # Assert that output has the expected shape
+        
+        # Optionally print the shape if it's needed for debugging
+        print("Output shape:", x.shape)
+        
+        # Perform a simple forward pass and check for errors
+        return x
+    
+    def train_debug2(self):
+        # Example data
+
+        x = get_tensor(self.X)
+        y = get_tensor(self.y)
+
+        dataset = tf.data.Dataset.from_tensor_slices((x, y))
+        # Train the model
+        model = mymodels.sect2()
+        model.compile()  # Compile the model first
+        model.model.fit(dataset, epochs=10)
 
 
 
@@ -165,7 +188,7 @@ class sect1(models):
 class single(models):
     def __init__(self):
         super().__init__()
-        self.dataset_folder = self.main_folder + 'dataset_tfrecord_small/'
+        self.dataset_folder = self.main_folder + 'dataset_tfrecord/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_single/'
 
     def initialise_data_and_model(self):
@@ -179,7 +202,6 @@ class single(models):
 
         self.train_dataset = make_tf_dataset(X, y)
         self.val_dataset = make_tf_dataset(X_test, y_test)
-            
 
         # Initialize the model
         self.model = mymodels.single()
