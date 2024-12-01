@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import seaborn as sns
 import os
 import tensorflow as tf
@@ -58,30 +59,66 @@ class StopAtMAE(Callback):
             self.model.stop_training = True
             self.reached_target = True
 
-def print_trainable_params(model, figsize=(5, 3)):
+
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as mcolors
+import tensorflow as tf
+
+def print_trainable_params(model, figsize=(2, 2), threshold=5):
     total_trainable_params = 0
     layer_names = []
     layer_params = []
+    layer_colors = []
+
+    # Define base colors for Dense and Conv layers
+    dense_color = 'red'  # Red color for Dense layers
+    conv_color = 'blue'  # Blue color for Conv2D layers
 
     # Collect data for the layers and their parameters
-    for layer in model.layers:
+    for idx, layer in enumerate(model.layers):
         if layer.trainable and len(layer.trainable_weights) > 0:  # Ensure the layer has trainable weights
             num_params = np.prod(layer.trainable_weights[0].shape)  # Number of parameters in the layer
             total_trainable_params += num_params
             layer_names.append(layer.name)
             layer_params.append(num_params)
 
+            # Assign colors based on layer type
+            if isinstance(layer, tf.keras.layers.Dense):
+                # Dense layer (Red)
+                color = dense_color
+            elif isinstance(layer, tf.keras.layers.Conv2D):
+                # Conv layer (Blue)
+                color = conv_color
+            else:
+                # Default color if it's neither Dense nor Conv
+                color = 'gray'  # Gray for other layers
+
+            layer_colors.append(color)
+
     # Create a pie chart with adjustable figsize
     fig, ax = plt.subplots(figsize=figsize)  # Create a figure with the specified figsize
-    ax.pie(layer_params, labels=layer_names, autopct='%1.1f%%', startangle=140)
-    ax.set_title(f"Trainable Parameters Distribution\nTotal: {total_trainable_params:,} params")
+    
+    # Custom function to conditionally show percentages
+    def percentage_label(x):
+        return f"{x:.0f}%" if x > threshold else ""  # Only show percentage if greater than threshold
+
+    # Create the pie chart with black edges
+    wedges, texts, autotexts = ax.pie(layer_params, autopct=lambda p: percentage_label(p), startangle=140,
+                                      colors=layer_colors, wedgeprops={'edgecolor': 'black'})  # Black line between slices
+    ax.set_title(f"Total: {total_trainable_params:,} params")
     ax.axis('equal')  # Equal aspect ratio ensures that pie chart is drawn as a circle.
 
     # Show the plot
     plt.show()
 
-    #print(f"\nTotal trainable parameters: {total_trainable_params:,}")
+    total_trainable_params = int(total_trainable_params)
+
     return total_trainable_params
+
+
+
+
 
 
 
@@ -152,6 +189,7 @@ class sect1():
             'batch_size': 512,
             'tensorboard': True,
             'cp_callback': True,
+            'save_final': True,
             'weights': None,
             'stop_at': None
         }
@@ -202,6 +240,10 @@ class sect1():
             callbacks=callbacks,
             verbose=0
         )
+
+        if params['save_final']:
+            self.model.save_weights(os.path.join(checkpoints_folder, f"{self.name}_final.weights.h5"))
+
         return model_run, stop_at_mae.reached_target if stop_at_mae else False
     
     def evaluate(self, dataset, weight_path):

@@ -62,14 +62,14 @@ class models:
         
         training_time = time.time() - start_time
         
-        return reached_target, training_time.round(1)
+        return reached_target, round(training_time, 1)
 
     def plot(self):
 
         history_model = self.run.history
         print("The history has the following data: ", history_model.keys())
 
-        fig, axs = plt.subplots(1, 2, figsize=(20, 5))
+        fig, axs = plt.subplots(1, 2, figsize=(10, 2))
 
         # Plotting the training and validation accuracy during the training
         sns.lineplot(
@@ -154,7 +154,8 @@ class sect1(models):
 
 
         self.model = mymodels.sect1(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape)
-        self.model.compile()
+        trainable_params = self.model.compile()
+        return trainable_params
 
     def eval_random(self):
         for a in self.val_dataset:  # Iterate through the dataset
