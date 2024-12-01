@@ -4,7 +4,7 @@ import seaborn as sns
 import os
 import tensorflow as tf
 from tensorflow.keras import layers, models
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard, Callback
 import subprocess
 import random
 
@@ -32,6 +32,61 @@ class SingleLineProgressBar(tf.keras.callbacks.Callback):
     def on_train_end(self, logs=None):
         print()  # Move to the next line after training ends
 
+class StopAtAccuracy(Callback):
+    def __init__(self, target_accuracy):
+        super().__init__()
+        self.target_accuracy = target_accuracy
+        self.reached_target = False
+
+    def on_epoch_end(self, epoch, logs=None):
+        accuracy = logs.get("val_accuracy")
+        if accuracy is not None and accuracy >= self.target_accuracy:
+            print(f"\nTarget accuracy of {self.target_accuracy} reached! Stopping training.")
+            self.model.stop_training = True
+            self.reached_target = True
+
+class StopAtMAE(Callback):
+    def __init__(self, target_mae):
+        super().__init__()
+        self.target_mae = target_mae
+        self.reached_target = False
+
+    def on_epoch_end(self, epoch, logs=None):
+        mae = logs.get("val_mean_absolute_error")  # Change to "mean_absolute_error" if no validation is used
+        if mae is not None and mae <= self.target_mae:  # Check if MAE is below the target
+            print(f"\nTarget MAE of {self.target_mae} reached! Stopping training.")
+            self.model.stop_training = True
+            self.reached_target = True
+
+def print_trainable_params(model, figsize=(5, 3)):
+    total_trainable_params = 0
+    layer_names = []
+    layer_params = []
+
+    # Collect data for the layers and their parameters
+    for layer in model.layers:
+        if layer.trainable and len(layer.trainable_weights) > 0:  # Ensure the layer has trainable weights
+            num_params = np.prod(layer.trainable_weights[0].shape)  # Number of parameters in the layer
+            total_trainable_params += num_params
+            layer_names.append(layer.name)
+            layer_params.append(num_params)
+
+    # Create a pie chart with adjustable figsize
+    fig, ax = plt.subplots(figsize=figsize)  # Create a figure with the specified figsize
+    ax.pie(layer_params, labels=layer_names, autopct='%1.1f%%', startangle=140)
+    ax.set_title(f"Trainable Parameters Distribution\nTotal: {total_trainable_params:,} params")
+    ax.axis('equal')  # Equal aspect ratio ensures that pie chart is drawn as a circle.
+
+    # Show the plot
+    plt.show()
+
+    #print(f"\nTotal trainable parameters: {total_trainable_params:,}")
+    return total_trainable_params
+
+
+
+
+
 class debug_model():
     def __init__(self):
         self.model = models.Sequential()
@@ -55,29 +110,24 @@ class debug_model():
         )
         return model_run
 class sect1():
-    def __init__(self, input_shape=(128, 128, 1)):
+    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1)):
         self.name = "sect1"
-        # Create the model
         self.model = models.Sequential()
-        # Add convolutional layers
+
+
         self.model.add(layers.Input(input_shape))
 
-        self.model.add(layers.Conv2D(32, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
+        for conv_layer in conv_layers:
+            self.model.add(layers.Conv2D(conv_layer, (3, 3), activation='relu'))
+            self.model.add(layers.MaxPooling2D((2, 2)))
 
-        # Flatten the output of the last convolutional layer
         self.model.add(layers.Flatten())
 
-        # Add fully connected (dense) layers
-        self.model.add(layers.Dense(128, activation='relu'))
-        self.model.add(layers.Dropout(0.5))
-        self.model.add(layers.Dense(64, activation='relu'))
-        self.model.add(layers.Dropout(0.5))
+        for dense_layer in dense_layers:
+            self.model.add(layers.Dense(dense_layer, activation='relu'))
+            #self.model.add(layers.Dropout(0.1))
 
-        # Output layer for regression to predict x and y coordinates
-        self.model.add(layers.Dense(2))  # Output layer with 2 neurons (x and y)
+        self.model.add(layers.Dense(2)) 
     
     def compile(self):
         lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
@@ -87,7 +137,8 @@ class sect1():
         optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
 
         self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
-        print(self.model.summary())
+        trainable_params = print_trainable_params(self.model)
+        return trainable_params
 
     def load_weights(self, path):
         self.model.load_weights(path)
@@ -95,25 +146,14 @@ class sect1():
 
 
     def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None):
-        """
-        Train the model using provided datasets and parameters.
-
-        Parameters:
-            train_dataset (tf.data.Dataset): Training dataset.
-            val_dataset (tf.data.Dataset): Validation dataset.
-            params (dict): Training parameters (epochs, batch size, etc.).
-            logs_folder (str): Folder path for saving TensorBoard logs.
-            checkpoints_folder (str): Folder path for saving model checkpoints.
-
-        Returns:
-            model_run (History): Training history object.
-        """
         # Default parameters
         default_params = {
             'epochs': 10,
             'batch_size': 512,
             'tensorboard': True,
-            'cp_callback': True
+            'cp_callback': True,
+            'weights': None,
+            'stop_at': None
         }
         
         # Merge provided params with defaults
@@ -123,6 +163,7 @@ class sect1():
             for key, value in default_params.items():
                 params.setdefault(key, value)
 
+        
         # Initialize callbacks
         callbacks = [SingleLineProgressBar()]
         if params['tensorboard']:
@@ -149,6 +190,10 @@ class sect1():
             file_path = checkpoints_folder + f"/{self.name}_epoch_{params['weights']}.weights.h5"
             self.model.load_weights(file_path)
 
+        if params['stop_at']:
+            stop_at_mae = StopAtMAE(params['stop_at'])
+            callbacks.append(stop_at_mae)
+
         # Train the model
         model_run = self.model.fit(
             train_dataset,
@@ -157,16 +202,7 @@ class sect1():
             callbacks=callbacks,
             verbose=0
         )
-        return model_run
-    
-    def train_min(self, train_dataset, val_dataset):
-        model_run = self.model.fit(
-        train_dataset,
-        epochs=20,
-        validation_data=val_dataset,
-        verbose=1
-        )
-        return model_run
+        return model_run, stop_at_mae.reached_target if stop_at_mae else False
     
     def evaluate(self, dataset, weight_path):
         if os.path.exists(weight_path):
@@ -200,8 +236,14 @@ class single(sect1):
 
         self.model = tf.keras.Sequential([
             tf.keras.layers.InputLayer(input_shape=(128, 128, 1)),  # Input layer for images
+            tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+            tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+            tf.keras.layers.MaxPooling2D((2, 2)),
             tf.keras.layers.Flatten(),  # Flatten the image into a vector
             tf.keras.layers.Dense(128, activation='relu'),  # Fully connected layer
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.Dense(64, activation='relu'),
             tf.keras.layers.Dense(10, activation='softmax')  # Output layer for 10 classes
         ])
 
