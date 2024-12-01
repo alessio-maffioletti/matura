@@ -60,11 +60,6 @@ class StopAtMAE(Callback):
             self.reached_target = True
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-import matplotlib.colors as mcolors
-import tensorflow as tf
-
 def print_trainable_params(model, figsize=(2, 2), threshold=5):
     total_trainable_params = 0
     layer_names = []
@@ -146,6 +141,7 @@ class debug_model():
             verbose=1
         )
         return model_run
+    
 class sect1():
     def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1)):
         self.name = "sect1"
@@ -302,4 +298,128 @@ class debug(sect1):
             tf.keras.layers.Dense(128, activation='relu'),  # Fully connected layer
             tf.keras.layers.Dense(2)  # Output layer for 10 classes
         ])
+
+class ClassificationModel:
+    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
+        self.name = "model"
+
+        self.model = models.Sequential()
+
+
+        self.model.add(layers.Input(input_shape))
+
+        for conv_layer in conv_layers:
+            self.model.add(layers.Conv2D(conv_layer, (3, 3), activation='relu'))
+            self.model.add(layers.MaxPooling2D((2, 2)))
+
+        self.model.add(layers.Flatten())
+
+        for dense_layer in dense_layers:
+            self.model.add(layers.Dense(dense_layer, activation='relu'))
+            #self.model.add(layers.Dropout(0.1))
+
+        self.model.add(layers.Dense(output_shape, activation=activation) ) 
+    
+    def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None, metric='accuracy'):
+        # Default parameters
+        default_params = {
+            'epochs': 10,
+            'batch_size': 512,
+            'tensorboard': True,
+            'cp_callback': True,
+            'save_final': True,
+            'weights': None,
+            'stop_at': None,
+            'weight_string': 'final',
+        }
+        
+        # Merge provided params with defaults
+        if not params:
+            params = default_params
+        else:
+            for key, value in default_params.items():
+                params.setdefault(key, value)
+
+        
+        # Initialize callbacks
+        callbacks = [SingleLineProgressBar()]
+        if params['tensorboard']:
+            if not params['weights']:
+                subprocess.run(
+                    [powershell_executable, '-Command', powershell_command],
+                    stdout=subprocess.DEVNULL,  # Suppress standard output
+                    stderr=subprocess.DEVNULL   # Suppress error output
+                )
+            
+            tensorboard_callback = TensorBoard(log_dir=logs_folder)
+            callbacks.append(tensorboard_callback)
+
+        if params['cp_callback']:
+            # Create a callback for saving model weights
+            cp_callback = tf.keras.callbacks.ModelCheckpoint(
+                filepath=os.path.join(checkpoints_folder, f"{self.name}{params['weight_string']}{{epoch:02d}}.weights.h5"),
+                save_weights_only=True,
+                verbose=0
+            )
+            callbacks.append(cp_callback)
+
+        if params['weights']:
+            file_path = checkpoints_folder + f"/{self.name}{params['weight_string']}.weights.h5"
+            self.model.load_weights(file_path)
+
+        if params['stop_at']:
+            if metric == 'mae':
+                early_stopping = StopAtMAE(params['stop_at'])
+                callbacks.append(early_stopping)
+            elif metric == 'accuracy':
+                early_stopping = StopAtAccuracy(params['stop_at'])
+                callbacks.append(early_stopping)
+            else:
+                raise ValueError(f"Unknown metric: {metric}")
+        else:
+            early_stopping = None
+
+        # Train the model
+        model_run = self.model.fit(
+            train_dataset,
+            epochs=params['epochs'],
+            validation_data=val_dataset,
+            callbacks=callbacks,
+            verbose=0
+        )
+
+        if params['save_final']:
+            self.model.save_weights(os.path.join(checkpoints_folder, f"{self.name}{params['weight_string']}.weights.h5"))
+
+        return model_run, early_stopping.reached_target if early_stopping else False
+    
+    def compile(self, optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy']):
+        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        trainable_params = print_trainable_params(self.model)
+        return trainable_params
+
+    def load_weights(self, path):
+        self.model.load_weights(path)
+    
+    def evaluate(self, dataset, weight_path):
+        if os.path.exists(weight_path):
+            self.model.load_weights(weight_path)
+
+        predictions = self.model.predict(dataset, verbose=1)
+
+        return predictions 
+    
+    def predict(self, input):
+        return self.model.predict(input, verbose=0)
+
+class RegressionModel(ClassificationModel):
+    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=2, activation='linear'):
+        super().__init__(conv_layers, dense_layers, input_shape, output_shape=output_shape, activation=activation)    
+
+    def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None, metric='mae'):
+        return super().train(train_dataset, val_dataset, params, logs_folder, checkpoints_folder, metric)
+    
+    def compile(self, optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error']):
+        return super().compile(optimizer, loss, metrics)
+
     
