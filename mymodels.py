@@ -316,7 +316,7 @@ class ClassificationModel:
 
         for dense_layer in dense_layers:
             self.model.add(layers.Dense(dense_layer, activation='relu'))
-            #self.model.add(layers.Dropout(0.1))
+            self.model.add(layers.Dropout(0.1))
 
         self.model.add(layers.Dense(output_shape, activation=activation) ) 
     
