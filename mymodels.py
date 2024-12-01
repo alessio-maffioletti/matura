@@ -183,27 +183,12 @@ class sect2(sect1):
     def __init__(self, input_shape=(42, 42, 1)):
         self.name = "sect2"
         
-        self.model = models.Sequential()
-
-        self.model.add(layers.Input(input_shape))
-
-        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-        self.model.add(layers.Conv2D(128, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-        self.model.add(layers.Conv2D(256, (3, 3), activation='relu'))
-        self.model.add(layers.MaxPooling2D((2, 2)))
-
-        # Flatten the output of the last convolutional layer
-        self.model.add(layers.Flatten())
-
-        # Add fully connected (dense) layers
-        self.model.add(layers.Dense(512, activation='relu'))
-        self.model.add(layers.Dropout(0.5))
-        self.model.add(layers.Dense(256, activation='relu'))
-        self.model.add(layers.Dropout(0.5))
-
-        self.model.add(layers.Dense(10, activation='softmax'))
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.InputLayer(input_shape=(42, 42, 1)),  # Input layer for images
+            tf.keras.layers.Flatten(),  # Flatten the image into a vector
+            tf.keras.layers.Dense(128, activation='relu'),  # Fully connected layer
+            tf.keras.layers.Dense(10, activation='softmax')  # Output layer for 10 classes
+        ])
 
     def compile(self):
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])

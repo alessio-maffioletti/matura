@@ -33,8 +33,8 @@ def _parse_image_function(example_proto, image_shape=[128,128,128,1], label_shap
 
 class models:
     def __init__(self):
-        #self.main_folder = '../'   #main use
-        self.main_folder = './'     #for debugging
+        self.main_folder = '../'   #main use
+        #self.main_folder = './'     #for debugging
         self.dataset_folder = self.main_folder + 'dataset2/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_sect2/'
         self.logs_folder = self.main_folder + 'logs/'
@@ -122,8 +122,8 @@ class sect2(models):
     def initialise_data_and_model(self):
         clear_session()
 
-        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'train_dataset_cropped.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, image_shape=[128,42,42,1],label_shape=[128, 1]))
-        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'test_dataset_cropped.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, image_shape=[128,42,42,1], label_shape=[128, 1]))
+        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'train_dataset_cropped.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, image_shape=[128,42,42,1],label_shape=[128, 10]))
+        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'test_dataset_cropped.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, image_shape=[128,42,42,1], label_shape=[128, 10]))
     
 
         self.model = mymodels.sect2()
@@ -134,14 +134,14 @@ class sect2(models):
 class sect1(models):
     def __init__(self):
         super().__init__()
-        self.dataset_folder = self.main_folder + 'dataset_tfrecord/'
+        self.dataset_folder = self.main_folder + 'dataset_tfrecord_small/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_sect1/'
 
     def initialise_data_and_model(self):
         clear_session()
 
-        self.train_dataset = tf.data.TFRecordDataset('./coords.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 2]))
-        self.val_dataset = tf.data.TFRecordDataset('./coords_test.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 2]))
+        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'coords.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 2]))
+        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'coords_test.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 2]))
 
 
         self.model = mymodels.sect1()
@@ -150,19 +150,16 @@ class sect1(models):
 class single(models):
     def __init__(self):
         super().__init__()
-        self.dataset_folder = self.main_folder + 'dataset_tfrecord/'
+        self.dataset_folder = self.main_folder + 'dataset_tfrecord_small/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_single/'
 
     def initialise_data_and_model(self):
         clear_session()
 
-        self.train_dataset = tf.data.TFRecordDataset('./train.tfrecord').map(_parse_image_function)
-        self.val_dataset = tf.data.TFRecordDataset('./test.tfrecord').map(_parse_image_function)
+        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'train.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 10]))
+        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'test.tfrecord').map(lambda example_proto: _parse_image_function(example_proto,label_shape=[128, 10]))
 
 
         # Initialize the model
-        self.model = mymodels.debug()
+        self.model = mymodels.single()
         self.model.compile()
-
-    def train(self, params):
-        self.run = self.model.train(self.train_dataset, self.train_dataset, params)
