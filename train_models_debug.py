@@ -9,23 +9,27 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 clear_session()
 
 
-def get_tensor(dataset):
-    tensor= []
-    for batch in dataset.take(-1):
-        batch = np.array(batch)
-        tensor.append(batch)
+def _parse_image_function(example_proto, image_shape=[128,128,128,1], label_shape=[128,1]):
+    # Define the features to be extracted (serialized image and label)
+    image_feature_description = {
+        'image': tf.io.FixedLenFeature([], tf.string),  # Expecting the image as a serialized tensor (string)
+        'label': tf.io.FixedLenFeature([], tf.string),  # Expecting the label as a serialized tensor (string)
+    }
 
-    tensor = np.array(tensor)
-    return tensor
-
-def load_tfrecord(filename, dataset_type=tf.int32):
-    parse_tensor = lambda x: tf.io.parse_tensor(x, dataset_type)
-    return tf.data.TFRecordDataset(filename).map(parse_tensor)
+    # Parse the input tf.train.Example proto using the dictionary
+    parsed_features = tf.io.parse_single_example(example_proto, image_feature_description)
     
-def make_tf_dataset(X, y):
-    dataset = tf.data.Dataset.zip((X, y))
-    dataset = dataset.prefetch(buffer_size=tf.data.AUTOTUNE)
-    return dataset
+    # Deserialize the image and label tensors
+    image = tf.io.parse_tensor(parsed_features['image'], out_type=tf.float32)  # Deserialize image tensor
+    label = tf.io.parse_tensor(parsed_features['label'], out_type=tf.int32)  # Deserialize label tensor
+
+    # Ensure that the image tensor has the correct shape
+    image.set_shape(image_shape)  # Set the known shape for the image tensor
+
+    # Ensure that the label tensor has the correct shape
+    label.set_shape(label_shape)
+
+    return image, label
 
 class models:
     def __init__(self):
@@ -112,54 +116,18 @@ class models:
 class sect2(models):
     def __init__(self):
         super().__init__()
-        self.dataset_folder = self.main_folder + 'dataset2/'
+        self.dataset_folder = self.main_folder + 'dataset2_small/'
         self.checkpoints_folder = self.main_folder + 'checkpoints_sect2/'
 
     def initialise_data_and_model(self):
         clear_session()
 
-        self.X = load_tfrecord(self.dataset_folder + 'train_image_cropped.tfrecord', dataset_type=tf.double)
-        self.y = load_tfrecord(self.dataset_folder + 'train_label.tfrecord', dataset_type=tf.float32)
-
-        self.X_test = load_tfrecord(self.dataset_folder + 'test_image_cropped.tfrecord', dataset_type=tf.double)
-        self.y_test = load_tfrecord(self.dataset_folder + 'test_label.tfrecord', dataset_type=tf.float32)
-
-        self.train_dataset = make_tf_dataset(self.X, self.y)
-        self.val_dataset = make_tf_dataset(self.X_test, self.y_test)
-
+        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'train_dataset_cropped.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, image_shape=[128,42,42,1],label_shape=[128, 1]))
+        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + 'test_dataset_cropped.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, image_shape=[128,42,42,1], label_shape=[128, 1]))
+    
 
         self.model = mymodels.sect2()
         self.model.compile()
-
-    def train_debug(self):
-        # Create dummy input data with shape (batch_size, height, width, channels)
-        input_data = tf.random.normal((128, 42, 42, 1))
-
-        test_model = mymodels.sect2().model
-        
-        # Get the model output
-        x = test_model(input_data)
-        
-        # Debug: Check the shape of the output tensor
-        tf.debugging.assert_shapes([(x, (128, 42, 42, 1))])  # Assert that output has the expected shape
-        
-        # Optionally print the shape if it's needed for debugging
-        print("Output shape:", x.shape)
-        
-        # Perform a simple forward pass and check for errors
-        return x
-    
-    def train_debug2(self):
-        # Example data
-
-        x = get_tensor(self.X)
-        y = get_tensor(self.y)
-
-        dataset = tf.data.Dataset.from_tensor_slices((x, y))
-        # Train the model
-        model = mymodels.sect2()
-        model.compile()  # Compile the model first
-        model.model.fit(dataset, epochs=10)
 
 
 
@@ -172,14 +140,8 @@ class sect1(models):
     def initialise_data_and_model(self):
         clear_session()
 
-        X = load_tfrecord(self.dataset_folder + 'train_image.tfrecord', dataset_type=tf.double)
-        y = load_tfrecord(self.dataset_folder + 'train_coords.tfrecord', dataset_type=tf.int32)
-
-        X_test = load_tfrecord(self.dataset_folder + 'test_image.tfrecord', dataset_type=tf.double)
-        y_test = load_tfrecord(self.dataset_folder + 'test_coords.tfrecord', dataset_type=tf.int32)
-
-        self.train_dataset = make_tf_dataset(X, y)
-        self.val_dataset = make_tf_dataset(X_test, y_test)
+        self.train_dataset = tf.data.TFRecordDataset('./coords.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 2]))
+        self.val_dataset = tf.data.TFRecordDataset('./coords_test.tfrecord').map(lambda example_proto: _parse_image_function(example_proto, label_shape=[128, 2]))
 
 
         self.model = mymodels.sect1()
@@ -194,15 +156,13 @@ class single(models):
     def initialise_data_and_model(self):
         clear_session()
 
-        X = load_tfrecord(self.dataset_folder + 'train_image.tfrecord', dataset_type=tf.double)
-        y = load_tfrecord(self.dataset_folder + 'train_label.tfrecord', dataset_type=tf.int64)
+        self.train_dataset = tf.data.TFRecordDataset('./train.tfrecord').map(_parse_image_function)
+        self.val_dataset = tf.data.TFRecordDataset('./test.tfrecord').map(_parse_image_function)
 
-        X_test = load_tfrecord(self.dataset_folder + 'test_image.tfrecord', dataset_type=tf.double)
-        y_test = load_tfrecord(self.dataset_folder + 'test_label.tfrecord', dataset_type=tf.int64)
-
-        self.train_dataset = make_tf_dataset(X, y)
-        self.val_dataset = make_tf_dataset(X_test, y_test)
 
         # Initialize the model
-        self.model = mymodels.single()
+        self.model = mymodels.debug()
         self.model.compile()
+
+    def train(self, params):
+        self.run = self.model.train(self.train_dataset, self.train_dataset, params)
