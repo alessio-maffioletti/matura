@@ -421,5 +421,29 @@ class RegressionModel(ClassificationModel):
     
     def compile(self, optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error']):
         return super().compile(optimizer, loss, metrics)
+    
+
+class SingleModel(ClassificationModel):
+    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=2, activation='softmax'):
+        self.name = "single_model"
+        image_input = layers.Input(shape=(128, 128, 1), name='image')  # Example shape for Conv3D
+        x = layers.Conv2D(32, kernel_size=(3, 3), activation='relu')(image_input)
+        x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = layers.Conv2D(64, kernel_size=(3, 3), activation='relu')(x)
+        x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+        x = layers.Flatten()(x)
+
+        # Coordinates Input
+        coordinates_input = layers.Input(shape=(2,), name='coords')  # 2 for x and y
+        y = layers.Dense(64, activation='relu')(coordinates_input)
+
+        # Merge the two branches
+        combined = layers.Concatenate()([x, y])
+        z = layers.Dense(128, activation='relu')(combined)
+        z = layers.Dense(64, activation='relu')(z)
+        output = layers.Dense(10, activation='softmax', name='label')(z)  # Single number output
+
+        # Define the model
+        self.model = models.Model(inputs=[image_input, coordinates_input], outputs=output)
 
     

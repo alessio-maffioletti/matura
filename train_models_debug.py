@@ -32,6 +32,33 @@ def _parse_image_function(example_proto, image_shape=[128,128,128,1], label_shap
 
     return image, label
 
+def _parse_image_function(example_proto, 
+                          image_shape=[128, 128, 128, 1], 
+                          coords_shape=[128, 2], 
+                          label_shape=[128, 10]):
+    # Define the features to be extracted (serialized tensors for image, coords, and label)
+    image_feature_description = {
+        'image': tf.io.FixedLenFeature([], tf.string),   # Serialized image tensor
+        'coords': tf.io.FixedLenFeature([], tf.string),  # Serialized coords tensor
+        'label': tf.io.FixedLenFeature([], tf.string),   # Serialized label tensor
+    }
+
+    # Parse the input `tf.train.Example` proto using the dictionary
+    parsed_features = tf.io.parse_single_example(example_proto, image_feature_description)
+    
+    # Deserialize the tensors
+    image = tf.io.parse_tensor(parsed_features['image'], out_type=tf.float32)  # Deserialize image tensor
+    coords = tf.io.parse_tensor(parsed_features['coords'], out_type=tf.float32)  # Deserialize coords tensor
+    label = tf.io.parse_tensor(parsed_features['label'], out_type=tf.int32)  # Deserialize label tensor
+
+    # Set the correct shapes for the tensors
+    image.set_shape(image_shape)    # Set the known shape for the image tensor
+    coords.set_shape(coords_shape)  # Set the known shape for the coords tensor
+    label.set_shape(label_shape)    # Set the known shape for the label tensor
+
+    return (image, coords), label
+
+
 class models:
     def __init__(self):
         self.main_folder = '../'   #main use
@@ -221,11 +248,22 @@ class better_models:
         self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + train_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
         self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + val_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
 
+        print(model_type)
+
+        for batch in self.train_dataset.take(1):  # Assuming train_dataset is your dataset
+            (inputs, coords), labels = batch
+            print(f"Inputs: {inputs}")
+            print(f"Labels: {labels}")
+            print(f"Image batch shape: {inputs.shape}")  # Image batch
+            print(f"Coords batch shape: {coords.shape}")  # Coordinates batch
+
 
         if model_type == 'classification':
             self.model = mymodels.ClassificationModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
         elif model_type == 'regression':
             self.model = mymodels.RegressionModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
+        elif model_type == 'single':
+            self.model = mymodels.SingleModel()
         trainable_params = self.model.compile()
         return trainable_params
     
@@ -346,7 +384,7 @@ class single_model(better_models):
         super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
     def initialise_data_and_model(self, train_dataset_name='train.tfrecord', 
                                   val_dataset_name='test.tfrecord', 
-                                  model_type='classification', 
+                                  model_type='single', 
                                   image_shape=[128, 128, 128, 1], 
                                   label_shape=[128, 10], 
                                   conv_layers=[32, 64], 
@@ -354,6 +392,8 @@ class single_model(better_models):
                                   input_shape=(128, 128, 1), 
                                   output_shape=10, 
                                   activation='softmax'):
+        
+        
         
         return super().initialise_data_and_model(train_dataset_name=train_dataset_name, val_dataset_name=val_dataset_name, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, image_shape=image_shape, label_shape=label_shape, output_shape=output_shape, activation=activation)
     
