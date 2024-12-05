@@ -113,6 +113,192 @@ def print_trainable_params(model, figsize=(2, 2), threshold=5):
 
 
 
+
+
+
+
+
+
+class debug_model():
+    def __init__(self):
+        self.model = models.Sequential()
+        self.model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(42, 42, 1)))
+        self.model.add(layers.MaxPooling2D((2, 2)))
+        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        self.model.add(layers.MaxPooling2D((2, 2)))
+        self.model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+        self.model.add(layers.Flatten())
+        self.model.add(layers.Dense(64, activation='relu'))
+        self.model.add(layers.Dense(10, activation='softmax'))
+        self.model.summary()
+        self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
+    
+    def train(self, train_dataset, val_dataset):
+        model_run = self.model.fit(
+            train_dataset,
+            epochs=20,
+            validation_data=val_dataset,
+            verbose=1
+        )
+        return model_run
+    
+class sect1():
+    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1)):
+        self.name = "sect1"
+        self.model = models.Sequential()
+
+
+        self.model.add(layers.Input(input_shape))
+
+        for conv_layer in conv_layers:
+            self.model.add(layers.Conv2D(conv_layer, (3, 3), activation='relu'))
+            self.model.add(layers.MaxPooling2D((2, 2)))
+
+        self.model.add(layers.Flatten())
+
+        for dense_layer in dense_layers:
+            self.model.add(layers.Dense(dense_layer, activation='relu'))
+            #self.model.add(layers.Dropout(0.1))
+
+        self.model.add(layers.Dense(2)) 
+    
+    def compile(self):
+        lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+            initial_learning_rate=0.001,
+            decay_steps=100000,
+            decay_rate=1)
+        optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
+
+        self.model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error'])
+        trainable_params = print_trainable_params(self.model)
+        return trainable_params
+
+    def load_weights(self, path):
+        self.model.load_weights(path)
+
+
+
+    def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None):
+        # Default parameters
+        default_params = {
+            'epochs': 10,
+            'batch_size': 512,
+            'tensorboard': True,
+            'cp_callback': True,
+            'save_final': True,
+            'weights': None,
+            'stop_at': None
+        }
+        
+        # Merge provided params with defaults
+        if not params:
+            params = default_params
+        else:
+            for key, value in default_params.items():
+                params.setdefault(key, value)
+
+        
+        # Initialize callbacks
+        callbacks = [SingleLineProgressBar()]
+        if params['tensorboard']:
+            if not params['weights']:
+                subprocess.run(
+                    [powershell_executable, '-Command', powershell_command],
+                    stdout=subprocess.DEVNULL,  # Suppress standard output
+                    stderr=subprocess.DEVNULL   # Suppress error output
+                )
+            
+            tensorboard_callback = TensorBoard(log_dir=logs_folder)
+            callbacks.append(tensorboard_callback)
+
+        if params['cp_callback']:
+            # Create a callback for saving model weights
+            cp_callback = tf.keras.callbacks.ModelCheckpoint(
+                filepath=os.path.join(checkpoints_folder, f"{self.name}_epoch_{{epoch:02d}}.weights.h5"),
+                save_weights_only=True,
+                verbose=0
+            )
+            callbacks.append(cp_callback)
+
+        if params['weights']:
+            file_path = checkpoints_folder + f"/{self.name}_epoch_{params['weights']}.weights.h5"
+            self.model.load_weights(file_path)
+
+        if params['stop_at']:
+            stop_at_mae = StopAtMAE(params['stop_at'])
+            callbacks.append(stop_at_mae)
+
+        # Train the model
+        model_run = self.model.fit(
+            train_dataset,
+            epochs=params['epochs'],
+            validation_data=val_dataset,
+            callbacks=callbacks,
+            verbose=0
+        )
+
+        if params['save_final']:
+            self.model.save_weights(os.path.join(checkpoints_folder, f"{self.name}_final.weights.h5"))
+
+        return model_run, stop_at_mae.reached_target if stop_at_mae else False
+    
+    def evaluate(self, dataset, weight_path):
+        if os.path.exists(weight_path):
+            self.model.load_weights(weight_path)
+
+        predictions = self.model.predict(dataset, verbose=1)
+
+        return predictions 
+    
+    def predict(self, input):
+        return self.model.predict(input, verbose=0)
+    
+class sect2(sect1):
+    def __init__(self, input_shape=(42, 42, 1)):
+        self.name = "sect2"
+        
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.InputLayer(input_shape=(42, 42, 1)),  # Input layer for images
+            tf.keras.layers.Flatten(),  # Flatten the image into a vector
+            tf.keras.layers.Dense(128, activation='relu'),  # Fully connected layer
+            tf.keras.layers.Dense(10, activation='softmax')  # Output layer for 10 classes
+        ])
+
+    def compile(self):
+        self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        print(self.model.summary())
+
+class single(sect1):
+    def __init__(self, input_shape=(128, 128,1)):
+        self.name = "single"
+
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.InputLayer(input_shape=(128, 128, 1)),  # Input layer for images
+            tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+            tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+            tf.keras.layers.MaxPooling2D((2, 2)),
+            tf.keras.layers.Flatten(),  # Flatten the image into a vector
+            tf.keras.layers.Dense(128, activation='relu'),  # Fully connected layer
+            tf.keras.layers.Dropout(0.5),
+            tf.keras.layers.Dense(64, activation='relu'),
+            tf.keras.layers.Dense(10, activation='softmax')  # Output layer for 10 classes
+        ])
+
+    def compile(self):
+        self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+        print(self.model.summary())
+
+
+class debug(sect1):
+    def __init__(self):
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.InputLayer(input_shape=(128, 128, 1)),  # Input layer for images
+            tf.keras.layers.Flatten(),  # Flatten the image into a vector
+            tf.keras.layers.Dense(128, activation='relu'),  # Fully connected layer
+            tf.keras.layers.Dense(2)  # Output layer for 10 classes
+        ])
+
 class ClassificationModel:
     def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
         self.name = "model"
