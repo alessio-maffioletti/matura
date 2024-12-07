@@ -5,12 +5,13 @@ import mymodels
 import tensorflow as tf
 from tensorflow.keras.backend import clear_session
 import time
+from constants import *
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 clear_session()
 
 
-def _parse_image_function(example_proto, batch_size=128, image_shape=[128,128,1], label_shape=[1]):
+def _parse_image_function(example_proto, image_shape=[128,128,1], label_shape=[10]):
     # Define the features to be extracted (serialized image and label)
     image_feature_description = {
         'image': tf.io.FixedLenFeature([], tf.string),  # Expecting the image as a serialized tensor (string)
@@ -24,8 +25,8 @@ def _parse_image_function(example_proto, batch_size=128, image_shape=[128,128,1]
     image = tf.io.parse_tensor(parsed_features['image'], out_type=tf.float32)  # Deserialize image tensor
     label = tf.io.parse_tensor(parsed_features['label'], out_type=tf.int32)  # Deserialize label tensor
 
-    image_shape = [batch_size, *image_shape]
-    label_shape = [batch_size, *label_shape]
+    image_shape = [BATCH_SIZE, *image_shape]
+    label_shape = [BATCH_SIZE, *label_shape]
 
     print(image_shape, label_shape)
 
@@ -38,9 +39,9 @@ def _parse_image_function(example_proto, batch_size=128, image_shape=[128,128,1]
     return image, label
 
 def _parse_image_function_2(example_proto, 
-                          image_shape=[128, 128, 128, 1], 
-                          coords_shape=[128, 2], 
-                          label_shape=[128, 10]):
+                            image_shape=[128, 128, 1], 
+                            coords_shape=[2], 
+                            label_shape=[10]):
     # Define the features to be extracted (serialized tensors for image, coords, and label)
     image_feature_description = {
         'image': tf.io.FixedLenFeature([], tf.string),   # Serialized image tensor
@@ -56,6 +57,11 @@ def _parse_image_function_2(example_proto,
     coords = tf.io.parse_tensor(parsed_features['coords'], out_type=tf.float32)  # Deserialize coords tensor
     label = tf.io.parse_tensor(parsed_features['label'], out_type=tf.int32)  # Deserialize label tensor
 
+    image_shape = [BATCH_SIZE, *image_shape]
+    coords_shape = [BATCH_SIZE, *coords_shape]
+    label_shape = [BATCH_SIZE, *label_shape]
+
+    print(image_shape, coords_shape, label_shape)
     # Set the correct shapes for the tensors
     image.set_shape(image_shape)    # Set the known shape for the image tensor
     coords.set_shape(coords_shape)  # Set the known shape for the coords tensor
@@ -78,12 +84,12 @@ class better_models:
         else:
             self.logs_folder = None
 
-    def initialise_data_and_model(self, train_dataset_name, val_dataset_name, image_shape, label_shape,  model_type, batch_size=128, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
+    def initialise_data_and_model(self, train_dataset_path, val_dataset_path, image_shape, label_shape,  model_type, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
         clear_session()
         #'coords.tfrecord'
         #'coords_test.tfrecord'
-        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + train_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape, batch_size=batch_size))
-        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + val_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape, batch_size=batch_size))
+        self.train_dataset = tf.data.TFRecordDataset(train_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
+        self.val_dataset = tf.data.TFRecordDataset(val_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
 
     def train(self, params=None):
         start_time = time.time()
@@ -160,8 +166,7 @@ class better_models:
 class section1(better_models):
     def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder='checkpoints_sect1', logs_folder='logs'):
         super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
-    def initialise_data_and_model(self, train_dataset_name='coords.tfrecord', 
-                                  val_dataset_name='coords_test.tfrecord', 
+    def initialise_data_and_model(self,
                                   model_type='regression', 
                                   image_shape=[128, 128, 1], 
                                   label_shape=[2], 
@@ -169,10 +174,9 @@ class section1(better_models):
                                   dense_layers=[128, 64], 
                                   input_shape=(128, 128, 1), 
                                   output_shape=2, 
-                                  batch_size=128,
                                   activation='linear'):
         
-        super().initialise_data_and_model(train_dataset_name=train_dataset_name, val_dataset_name=val_dataset_name, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation, batch_size=batch_size)
+        super().initialise_data_and_model(train_dataset_path=TRAIN_COORDS_PATH, val_dataset_path=TEST_COORDS_PATH, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
     
         self.model = mymodels.RegressionModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
         trainable_params = self.model.compile()
@@ -190,18 +194,17 @@ class section1(better_models):
 class section2(better_models):
     def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder='checkpoints_sect2', logs_folder='logs'):
         super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
-    def initialise_data_and_model(self, train_dataset_name='train_dataset_cropped.tfrecord', 
-                                  val_dataset_name='test_dataset_cropped.tfrecord', 
+    def initialise_data_and_model(self,
                                   model_type='classification', 
-                                  image_shape=[128,42,42,1], 
-                                  label_shape=[128,10], 
+                                  image_shape=[42,42,1], 
+                                  label_shape=[10], 
                                   conv_layers=[32, 64], 
                                   dense_layers=[128, 64], 
                                   input_shape=(42, 42, 1), 
                                   output_shape=10, 
                                   activation='softmax'):
         
-        super().initialise_data_and_model(train_dataset_name=train_dataset_name, val_dataset_name=val_dataset_name, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
+        super().initialise_data_and_model(train_dataset_path=TRAIN_CROPPED_PATH, val_dataset_path=TEST_CROPPED_PATH, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
     
         self.model = mymodels.ClassificationModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
         trainable_params = self.model.compile()
@@ -212,19 +215,18 @@ class section2(better_models):
 class single_model(better_models):
     def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder='checkpoints_single', logs_folder='logs'):
         super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
-    def initialise_data_and_model(self, train_dataset_name='train.tfrecord', 
-                                  val_dataset_name='test.tfrecord', 
+    def initialise_data_and_model(self,
                                   model_type='single', 
-                                  image_shape=[128, 128, 128, 1], 
-                                  label_shape=[128, 10], 
+                                  image_shape=[128, 128, 1], 
+                                  label_shape=[10], 
                                   conv_layers=[32, 64], 
                                   dense_layers=[128, 64], 
                                   input_shape=(128, 128, 1), 
                                   output_shape=10, 
                                   activation='softmax'):
         
-        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + train_dataset_name).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=image_shape, label_shape=label_shape))
-        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + val_dataset_name).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=image_shape, label_shape=label_shape))
+        self.train_dataset = tf.data.TFRecordDataset(TRAIN_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=image_shape, label_shape=label_shape))
+        self.val_dataset = tf.data.TFRecordDataset(TEST_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=image_shape, label_shape=label_shape))
         self.model = mymodels.SingleModel()
         trainable_params = self.model.compile()
         return trainable_params    

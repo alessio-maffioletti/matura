@@ -6,7 +6,7 @@ from tensorflow.keras import utils
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 import mymodels
-
+from constants import *
 
 class TFRecordHandler:
     def __init__(self, image_shape=(128, 128, 1), label_shape=(10,), coords_shape=None):
@@ -49,33 +49,33 @@ class TFRecordHandler:
                 tf_example = self.serialize_example(serialized_image, serialized_label, serialized_coords)
                 writer.write(tf_example.SerializeToString())
 
-    def data_generator(self, images, labels, coords=None, batch_size=128):
+    def data_generator(self, images, labels, coords=None):
         """Generator for batching data."""
-        for i in range(0, len(images), batch_size):
+        for i in range(0, len(images), BATCH_SIZE):
             if coords is not None:
-                yield (images[i:i+batch_size], coords[i:i+batch_size]), labels[i:i+batch_size]
+                yield (images[i:i+BATCH_SIZE], coords[i:i+BATCH_SIZE]), labels[i:i+BATCH_SIZE]
             else:
-                yield images[i:i+batch_size], labels[i:i+batch_size]
+                yield images[i:i+BATCH_SIZE], labels[i:i+BATCH_SIZE]
 
-    def create_tf_dataset(self, images, labels, coords=None, batch_size=128):
+    def create_tf_dataset(self, images, labels, coords=None):
         """Create a TensorFlow dataset."""
         if coords is not None:
             dataset = tf.data.Dataset.from_generator(
-                lambda: self.data_generator(images, labels, coords, batch_size),
+                lambda: self.data_generator(images, labels, coords, BATCH_SIZE),
                 output_signature=(
                     (
-                        tf.TensorSpec(shape=(batch_size, *self.image_shape), dtype=tf.float32),
-                        tf.TensorSpec(shape=(batch_size, *self.coords_shape), dtype=tf.float32)
+                        tf.TensorSpec(shape=(BATCH_SIZE, *self.image_shape), dtype=tf.float32),
+                        tf.TensorSpec(shape=(BATCH_SIZE, *self.coords_shape), dtype=tf.float32)
                     ),
-                    tf.TensorSpec(shape=(batch_size, *self.label_shape), dtype=tf.int32)
+                    tf.TensorSpec(shape=(BATCH_SIZE, *self.label_shape), dtype=tf.int32)
                 )
             )
         else:
             dataset = tf.data.Dataset.from_generator(
-                lambda: self.data_generator(images, labels, batch_size=batch_size),
+                lambda: self.data_generator(images, labels),
                 output_signature=(
-                    tf.TensorSpec(shape=(batch_size, *self.image_shape), dtype=tf.float32),
-                    tf.TensorSpec(shape=(batch_size, *self.label_shape), dtype=tf.int32)
+                    tf.TensorSpec(shape=(BATCH_SIZE, *self.image_shape), dtype=tf.float32),
+                    tf.TensorSpec(shape=(BATCH_SIZE, *self.label_shape), dtype=tf.int32)
                 )
             )
         return dataset
@@ -122,7 +122,7 @@ class Dataset1:
 
         return X, coords, labels
     
-    def generate_dataset(self,train_coords_path, test_coords_path, train_labels_path, test_labels_path, batch_size=128,  n_images=1280, whole_dataset=False):
+    def generate_dataset(self, n_images=1280, whole_dataset=False):
         if whole_dataset:
             images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=self.X_train.shape[0]) #59904
             images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=self.X_test.shape[0]) #9984
@@ -131,16 +131,16 @@ class Dataset1:
             images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=n_images) #9984
 
         single_handler = TFRecordHandler(image_shape=(128, 128, 1), label_shape=(2,))
-        coords_dataset = single_handler.create_tf_dataset(images, coords, batch_size=batch_size)
-        coords_test_dataset = single_handler.create_tf_dataset(images_test, coords_test, batch_size=batch_size)
-        single_handler.write_tfrecord(coords_dataset, train_coords_path, dual_input=False)
-        single_handler.write_tfrecord(coords_test_dataset, test_coords_path, dual_input=False)
+        coords_dataset = single_handler.create_tf_dataset(images, coords)
+        coords_test_dataset = single_handler.create_tf_dataset(images_test, coords_test)
+        single_handler.write_tfrecord(coords_dataset, filename=TRAIN_COORDS_PATH, dual_input=False)
+        single_handler.write_tfrecord(coords_test_dataset, filename=TEST_COORDS_PATH, dual_input=False)
 
         dual_handler = TFRecordHandler(image_shape=(128, 128, 1), label_shape=(10,), coords_shape=(2,))
-        train_dataset = dual_handler.create_tf_dataset(images, labels, coords=coords, batch_size=batch_size)
-        test_dataset = dual_handler.create_tf_dataset(images_test, labels_test, coords=coords_test, batch_size=batch_size)
-        dual_handler.write_tfrecord(train_dataset, train_labels_path, dual_input=True)
-        dual_handler.write_tfrecord(test_dataset, test_labels_path, dual_input=True)
+        train_dataset = dual_handler.create_tf_dataset(images, labels, coords=coords)
+        test_dataset = dual_handler.create_tf_dataset(images_test, labels_test, coords=coords_test)
+        dual_handler.write_tfrecord(train_dataset, filename=TRAIN_SINGLE_PATH, dual_input=True)
+        dual_handler.write_tfrecord(test_dataset, filename=TEST_SINGLE_PATH, dual_input=True)
 
 class Dataset2:
     def __init__(self, weights, conv_layers, dense_layers):
@@ -148,7 +148,12 @@ class Dataset2:
         self.conv_layers = conv_layers
         self.dense_layers = dense_layers
 
-    def _parse_image_function(self, example_proto, image_shape=[128, 128, 128, 1], coords_shape=[128, 2], label_shape=[128, 10]):
+    def _parse_image_function(self,
+                                example_proto, 
+                                image_shape=[128, 128, 1], 
+                                coords_shape=[2], 
+                                label_shape=[10]):
+        # Define the features to be extracted (serialized tensors for image, coords, and label)
         image_feature_description = {
             'image': tf.io.FixedLenFeature([], tf.string),   # Serialized image tensor
             'coords': tf.io.FixedLenFeature([], tf.string),  # Serialized coords tensor
@@ -163,6 +168,10 @@ class Dataset2:
         coords = tf.io.parse_tensor(parsed_features['coords'], out_type=tf.float32)  # Deserialize coords tensor
         label = tf.io.parse_tensor(parsed_features['label'], out_type=tf.int32)  # Deserialize label tensor
 
+        image_shape = [BATCH_SIZE, *image_shape]
+        coords_shape = [BATCH_SIZE, *coords_shape]
+        label_shape = [BATCH_SIZE, *label_shape]
+
         # Set the correct shapes for the tensors
         image.set_shape(image_shape)    # Set the known shape for the image tensor
         coords.set_shape(coords_shape)  # Set the known shape for the coords tensor
@@ -171,7 +180,7 @@ class Dataset2:
         return (image, coords), label
     
     def read_tfrecord(self, filename):
-        dataset = tf.data.TFRecordDataset(filename).map(self._parse_image_function)
+        dataset = tf.data.TFRecordDataset(filename).map(lambda example_proto: self._parse_image_function(example_proto))
         return dataset
     
     def crop_images(self, X_train_canvas, batch, model):
@@ -239,16 +248,16 @@ class Dataset2:
                 tf_example = self.example_test(serialized_image, serialized_label)
                 writer.write(tf_example.SerializeToString())
 
-    def generate_dataset(self, train_dataset_path, test_dataset_path, write_train_dataset_path, write_test_dataset_path):
-        train_dataset = self.read_tfrecord(train_dataset_path)
-        val_dataset = self.read_tfrecord(test_dataset_path)
+    def generate_dataset(self):
+        train_dataset = self.read_tfrecord(filename=TRAIN_SINGLE_PATH)
+        val_dataset = self.read_tfrecord(filename=TEST_SINGLE_PATH)
 
         model = mymodels.RegressionModel(self.conv_layers, self.dense_layers, )
         model.compile()
         model.load_weights(self.weights)
 
-        self.write_tfrecord(train_dataset, write_train_dataset_path, model)
-        self.write_tfrecord(val_dataset, write_test_dataset_path, model)
+        self.write_tfrecord(train_dataset, model, filename=TRAIN_CROPPED_PATH)
+        self.write_tfrecord(val_dataset, model, filename=TEST_CROPPED_PATH)
 
 
 
