@@ -65,7 +65,7 @@ class Optimizer:
 
             #model = sect1()
             trainable_params = model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers)
-            params = {'epochs': int(120),
+            params = {'epochs': 30,
                     'tensorboard': False, 
                     'cp_callback': False,
                     'weights': None,

@@ -71,30 +71,17 @@ def _parse_image_function_2(example_proto,
 
 
 class better_models:
-    def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder=None, logs_folder=None):
-        self.main_folder = main_folder   #main use
-        #self.main_folder = './'     #for debugging
-        self.dataset_folder = self.main_folder + dataset_folder + '/'
-        if checkpoints_folder:
-            self.checkpoints_folder = self.main_folder + checkpoints_folder + '/'
-        else:
-            self.checkpoints_folder = None
-        if logs_folder:
-            self.logs_folder = self.main_folder + logs_folder + '/'
-        else:
-            self.logs_folder = None
-
-    def initialise_data_and_model(self, train_dataset_path, val_dataset_path, image_shape, label_shape,  model_type, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
+    def initialise_data_and_model(self, train_dataset_path, val_dataset_path, image_shape, label_shape):
         clear_session()
         #'coords.tfrecord'
         #'coords_test.tfrecord'
         self.train_dataset = tf.data.TFRecordDataset(train_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
         self.val_dataset = tf.data.TFRecordDataset(val_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
 
-    def train(self, params=None):
+    def train(self, checkpoints_folder, params):
         start_time = time.time()
         
-        self.run, reached_target = self.model.train(self.train_dataset, self.val_dataset, params, self.logs_folder, self.checkpoints_folder)
+        self.run, reached_target = self.model.train(self.train_dataset, self.val_dataset, params, checkpoints_folder)
         
         training_time = time.time() - start_time
         
@@ -164,24 +151,16 @@ class better_models:
         plt.show()
 
 class section1(better_models):
-    def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder='checkpoints_sect1', logs_folder='logs'):
-        super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
-    def initialise_data_and_model(self,
-                                  model_type='regression', 
-                                  image_shape=[128, 128, 1], 
-                                  label_shape=[2], 
-                                  conv_layers=[32, 64], 
-                                  dense_layers=[128, 64], 
-                                  input_shape=(128, 128, 1), 
-                                  output_shape=2, 
-                                  activation='linear'):
+    def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
         
-        super().initialise_data_and_model(train_dataset_path=TRAIN_COORDS_PATH, val_dataset_path=TEST_COORDS_PATH, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
+        super().initialise_data_and_model(train_dataset_path=TRAIN_COORDS_PATH, val_dataset_path=TEST_COORDS_PATH, image_shape=IMAGE_SHAPE, label_shape=COORDS_SHAPE)
     
-        self.model = mymodels.RegressionModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
+        self.model = mymodels.RegressionModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=INPUT_SHAPE, output_shape=COORDS_OUTPUT_SHAPE, activation=REGRESSION_ACTIVATION)
         trainable_params = self.model.compile()
         return trainable_params
         
+    def train(self, params=None):
+        return super().train(SECT1_CHECKPOINT_FOLDER, params)
     
     def _plot_random(self, image, predicted, actual):
         plt.imshow(image, cmap='gray')
@@ -192,41 +171,26 @@ class section1(better_models):
         plt.show()
     
 class section2(better_models):
-    def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder='checkpoints_sect2', logs_folder='logs'):
-        super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
-    def initialise_data_and_model(self,
-                                  model_type='classification', 
-                                  image_shape=[42,42,1], 
-                                  label_shape=[10], 
-                                  conv_layers=[32, 64], 
-                                  dense_layers=[128, 64], 
-                                  input_shape=(42, 42, 1), 
-                                  output_shape=10, 
-                                  activation='softmax'):
+    def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
         
-        super().initialise_data_and_model(train_dataset_path=TRAIN_CROPPED_PATH, val_dataset_path=TEST_CROPPED_PATH, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
+        super().initialise_data_and_model(train_dataset_path=TRAIN_CROPPED_PATH, val_dataset_path=TEST_CROPPED_PATH, image_shape=CROPPED_IMAGE_SHAPE, label_shape=LABELS_SHAPE)
     
-        self.model = mymodels.ClassificationModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
-        trainable_params = self.model.compile()
+        self.model = mymodels.ClassificationModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=CROPPED_INPUT_SHAPE, output_shape=LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION)
+        trainable_params = self.model.compile(optimizer='adam',loss='mean_absolute_error', metrics=['accuracy'] )
 
         return trainable_params
-        
+    
+    def train(self, params=None):
+        return super().train(SECT2_CHECKPOINT_FOLDER, params)
     
 class single_model(better_models):
-    def __init__(self, main_folder='../', dataset_folder='dataset_tfrecord_small', checkpoints_folder='checkpoints_single', logs_folder='logs'):
-        super().__init__(main_folder, dataset_folder, checkpoints_folder, logs_folder)
-    def initialise_data_and_model(self,
-                                  model_type='single', 
-                                  image_shape=[128, 128, 1], 
-                                  label_shape=[10], 
-                                  conv_layers=[32, 64], 
-                                  dense_layers=[128, 64], 
-                                  input_shape=(128, 128, 1), 
-                                  output_shape=10, 
-                                  activation='softmax'):
+    def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
         
-        self.train_dataset = tf.data.TFRecordDataset(TRAIN_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=image_shape, label_shape=label_shape))
-        self.val_dataset = tf.data.TFRecordDataset(TEST_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=image_shape, label_shape=label_shape))
+        self.train_dataset = tf.data.TFRecordDataset(TRAIN_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=IMAGE_SHAPE, label_shape=LABELS_SHAPE))
+        self.val_dataset = tf.data.TFRecordDataset(TEST_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=IMAGE_SHAPE, label_shape=LABELS_SHAPE))
         self.model = mymodels.SingleModel()
-        trainable_params = self.model.compile()
+        trainable_params = self.model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
         return trainable_params    
+    
+    def train(self, params=None):
+        return super().train(SINGLE_CHECKPOINT_FOLDER, params)

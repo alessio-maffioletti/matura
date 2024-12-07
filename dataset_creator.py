@@ -61,7 +61,7 @@ class TFRecordHandler:
         """Create a TensorFlow dataset."""
         if coords is not None:
             dataset = tf.data.Dataset.from_generator(
-                lambda: self.data_generator(images, labels, coords, BATCH_SIZE),
+                lambda: self.data_generator(images, labels, coords),
                 output_signature=(
                     (
                         tf.TensorSpec(shape=(BATCH_SIZE, *self.image_shape), dtype=tf.float32),
@@ -236,7 +236,7 @@ class Dataset2:
         #print(f'feature: {feature["label"]}')
         return tf.train.Example(features=tf.train.Features(feature=feature))
     
-    def write_tfrecord(self, data, filename, model):
+    def write_tfrecord(self, data, model, filename):
         """Write data to a TFRecord file."""
         with tf.io.TFRecordWriter(filename) as writer:
             for n, batch in enumerate(data):
@@ -252,7 +252,7 @@ class Dataset2:
         train_dataset = self.read_tfrecord(filename=TRAIN_SINGLE_PATH)
         val_dataset = self.read_tfrecord(filename=TEST_SINGLE_PATH)
 
-        model = mymodels.RegressionModel(self.conv_layers, self.dense_layers, )
+        model = mymodels.RegressionModel(INPUT_SHAPE, COORDS_OUTPUT_SHAPE, REGRESSION_ACTIVATION, self.conv_layers, self.dense_layers)
         model.compile()
         model.load_weights(self.weights)
 

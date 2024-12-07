@@ -8,6 +8,7 @@ from tensorflow.keras import layers, models
 from tensorflow.keras.callbacks import TensorBoard, Callback
 import subprocess
 import random
+from constants import *
 
 random.seed(42)
 np.random.seed(42)
@@ -114,7 +115,7 @@ def print_trainable_params(model, figsize=(2, 2), threshold=5):
 
 
 class ClassificationModel:
-    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
+    def __init__(self, input_shape, output_shape, activation, conv_layers=[32,64], dense_layers=[128,64]):
         self.name = "model"
 
         self.model = models.Sequential()
@@ -136,7 +137,7 @@ class ClassificationModel:
 
         print(self.model.summary())
     
-    def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None, metric='accuracy'):
+    def train(self, train_dataset, val_dataset, params, checkpoints_folder, metric='accuracy'):
         # Default parameters
         default_params = {
             'epochs': 10,
@@ -167,7 +168,7 @@ class ClassificationModel:
                     stderr=subprocess.DEVNULL   # Suppress error output
                 )
             
-            tensorboard_callback = TensorBoard(log_dir=logs_folder)
+            tensorboard_callback = TensorBoard(log_dir=LOGS_FOLDER)
             callbacks.append(tensorboard_callback)
 
         if params['cp_callback']:
@@ -209,7 +210,7 @@ class ClassificationModel:
 
         return model_run, early_stopping.reached_target if early_stopping else False
     
-    def compile(self, optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy']):
+    def compile(self, optimizer, loss, metrics):
         self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         trainable_params = print_trainable_params(self.model)
         return trainable_params
@@ -229,20 +230,17 @@ class ClassificationModel:
         return self.model.predict(input, verbose=0)
 
 class RegressionModel(ClassificationModel):
-    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=2, activation='linear'):
-        super().__init__(conv_layers, dense_layers, input_shape, output_shape=output_shape, activation=activation)    
-
-    def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None, metric='mae'):
-        return super().train(train_dataset, val_dataset, params, logs_folder, checkpoints_folder, metric)
+    def train(self, train_dataset, val_dataset, params,checkpoints_folder, metric='mae'):
+        return super().train(train_dataset, val_dataset, params,checkpoints_folder, metric)
     
     def compile(self, optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error']):
         return super().compile(optimizer, loss, metrics)
     
 
 class SingleModel(ClassificationModel):
-    def __init__(self, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=2, activation='softmax'):
+    def __init__(self, conv_layers=[32,64], dense_layers=[128,64]):
         self.name = "single_model"
-        image_input = layers.Input(shape=(128, 128, 1), name='image')  # Example shape for Conv3D
+        image_input = layers.Input(shape=INPUT_SHAPE, name='image')  # Example shape for Conv3D
         x = layers.Conv2D(32, kernel_size=(3, 3), activation='relu')(image_input)
         x = layers.MaxPooling2D(pool_size=(2, 2))(x)
         x = layers.Conv2D(64, kernel_size=(3, 3), activation='relu')(x)
@@ -250,14 +248,14 @@ class SingleModel(ClassificationModel):
         x = layers.Flatten()(x)
 
         # Coordinates Input
-        coordinates_input = layers.Input(shape=(2,), name='coords')  # 2 for x and y
+        coordinates_input = layers.Input(shape=COORDS_OUTPUT_SHAPE, name='coords')  # 2 for x and y
         y = layers.Dense(64, activation='relu')(coordinates_input)
 
         # Merge the two branches
         combined = layers.Concatenate()([x, y])
         z = layers.Dense(128, activation='relu')(combined)
         z = layers.Dense(64, activation='relu')(z)
-        output = layers.Dense(10, activation='softmax', name='label')(z)  # Single number output
+        output = layers.Dense(LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, name='label')(z)  # Single number output
 
         # Define the model
         self.model = models.Model(inputs=[image_input, coordinates_input], outputs=output)
