@@ -188,7 +188,8 @@ class single_model(better_models):
         
         self.train_dataset = tf.data.TFRecordDataset(TRAIN_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=IMAGE_SHAPE, label_shape=LABELS_SHAPE))
         self.val_dataset = tf.data.TFRecordDataset(TEST_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=IMAGE_SHAPE, label_shape=LABELS_SHAPE))
-        self.model = mymodels.SingleModel()
+        
+        self.model = mymodels.SingleModel(conv_layers=conv_layers, dense_layers=dense_layers)
         trainable_params = self.model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
         return trainable_params    
     

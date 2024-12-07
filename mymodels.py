@@ -237,27 +237,41 @@ class RegressionModel(ClassificationModel):
         return super().compile(optimizer, loss, metrics)
     
 
+
 class SingleModel(ClassificationModel):
-    def __init__(self, conv_layers=[32,64], dense_layers=[128,64]):
+    def __init__(self, conv_layers=[32, 64], dense_layers=[128, 64]):
         self.name = "single_model"
-        image_input = layers.Input(shape=INPUT_SHAPE, name='image')  # Example shape for Conv3D
-        x = layers.Conv2D(32, kernel_size=(3, 3), activation='relu')(image_input)
-        x = layers.MaxPooling2D(pool_size=(2, 2))(x)
-        x = layers.Conv2D(64, kernel_size=(3, 3), activation='relu')(x)
-        x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+
+        # Image Input branch
+        image_input = layers.Input(shape=INPUT_SHAPE, name='image')
+        x = image_input
+
+        for conv_layer in conv_layers:
+            x = layers.Conv2D(conv_layer, kernel_size=(3, 3), activation='relu')(x)
+            x = layers.MaxPooling2D(pool_size=(2, 2))(x)
+
         x = layers.Flatten()(x)
 
-        # Coordinates Input
-        coordinates_input = layers.Input(shape=COORDS_OUTPUT_SHAPE, name='coords')  # 2 for x and y
-        y = layers.Dense(64, activation='relu')(coordinates_input)
+        # Coordinates Input branch
+        coordinates_input = layers.Input(shape=COORDS_SHAPE, name='coords')
+        y = coordinates_input
+        y = layers.Dense(64, activation='relu')(y)  # Example dense layer for coords input
 
         # Merge the two branches
         combined = layers.Concatenate()([x, y])
-        z = layers.Dense(128, activation='relu')(combined)
-        z = layers.Dense(64, activation='relu')(z)
-        output = layers.Dense(LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, name='label')(z)  # Single number output
+
+        # Fully connected layers after concatenation
+        z = combined
+        for dense_layer in dense_layers:
+            z = layers.Dense(dense_layer, activation='relu')(z)
+            z = layers.Dropout(0.01)(z)  # Example dropout layer
+
+        output = layers.Dense(LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, name='label')(z)
 
         # Define the model
         self.model = models.Model(inputs=[image_input, coordinates_input], outputs=output)
+
+        # Print model summary
+        print(self.model.summary())
 
     

@@ -7,6 +7,18 @@ from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 import mymodels
 from constants import *
+import psutil
+
+def limit_memory_windows(max_memory_gb):
+    max_memory_bytes = max_memory_gb * 1024 * 1024 * 1024
+    process = psutil.Process()
+    if process.memory_info().rss > max_memory_bytes:
+        raise MemoryError(f"Memory usage exceeds {max_memory_gb} GB")
+
+# Example usage
+limit_memory_windows(10)  # Raise an error if the process uses more than 2 GB of memory
+
+
 
 class TFRecordHandler:
     def __init__(self, image_shape=(128, 128, 1), label_shape=(10,), coords_shape=None):
@@ -122,25 +134,34 @@ class Dataset1:
 
         return X, coords, labels
     
-    def generate_dataset(self, n_images=1280, whole_dataset=False):
+    def generate_dataset(self, train_size=1280, test_size=1280, whole_dataset=False):
         if whole_dataset:
             images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=self.X_train.shape[0]) #59904
             images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=self.X_test.shape[0]) #9984
         else:
-            images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=n_images) #59904
-            images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=n_images) #9984
+            if train_size % BATCH_SIZE != 0:
+                train_size -= train_size % BATCH_SIZE
+            if test_size % BATCH_SIZE != 0:
+                test_size -= test_size % BATCH_SIZE
+        
+            images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=train_size) #59904
+            images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=test_size) #9984
 
-        single_handler = TFRecordHandler(image_shape=(128, 128, 1), label_shape=(2,))
+        single_handler = TFRecordHandler(image_shape=INPUT_SHAPE, label_shape=COORDS_SHAPE)
         coords_dataset = single_handler.create_tf_dataset(images, coords)
-        coords_test_dataset = single_handler.create_tf_dataset(images_test, coords_test)
         single_handler.write_tfrecord(coords_dataset, filename=TRAIN_COORDS_PATH, dual_input=False)
+        del coords_dataset
+        coords_test_dataset = single_handler.create_tf_dataset(images_test, coords_test)
         single_handler.write_tfrecord(coords_test_dataset, filename=TEST_COORDS_PATH, dual_input=False)
+        del coords_test_dataset
 
-        dual_handler = TFRecordHandler(image_shape=(128, 128, 1), label_shape=(10,), coords_shape=(2,))
+        dual_handler = TFRecordHandler(image_shape=INPUT_SHAPE, label_shape=LABELS_SHAPE, coords_shape=COORDS_SHAPE)
         train_dataset = dual_handler.create_tf_dataset(images, labels, coords=coords)
-        test_dataset = dual_handler.create_tf_dataset(images_test, labels_test, coords=coords_test)
         dual_handler.write_tfrecord(train_dataset, filename=TRAIN_SINGLE_PATH, dual_input=True)
+        del train_dataset
+        test_dataset = dual_handler.create_tf_dataset(images_test, labels_test, coords=coords_test)
         dual_handler.write_tfrecord(test_dataset, filename=TEST_SINGLE_PATH, dual_input=True)
+        del test_dataset
 
 class Dataset2:
     def __init__(self, weights, conv_layers, dense_layers):
