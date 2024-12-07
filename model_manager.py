@@ -10,7 +10,7 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 clear_session()
 
 
-def _parse_image_function(example_proto, image_shape=[128,128,128,1], label_shape=[128,1]):
+def _parse_image_function(example_proto, batch_size=128, image_shape=[128,128,1], label_shape=[1]):
     # Define the features to be extracted (serialized image and label)
     image_feature_description = {
         'image': tf.io.FixedLenFeature([], tf.string),  # Expecting the image as a serialized tensor (string)
@@ -23,6 +23,11 @@ def _parse_image_function(example_proto, image_shape=[128,128,128,1], label_shap
     # Deserialize the image and label tensors
     image = tf.io.parse_tensor(parsed_features['image'], out_type=tf.float32)  # Deserialize image tensor
     label = tf.io.parse_tensor(parsed_features['label'], out_type=tf.int32)  # Deserialize label tensor
+
+    image_shape = [batch_size, *image_shape]
+    label_shape = [batch_size, *label_shape]
+
+    print(image_shape, label_shape)
 
     # Ensure that the image tensor has the correct shape
     image.set_shape(image_shape)  # Set the known shape for the image tensor
@@ -73,17 +78,12 @@ class better_models:
         else:
             self.logs_folder = None
 
-    def initialise_data_and_model(self, train_dataset_name, val_dataset_name, image_shape, label_shape, model_type, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
+    def initialise_data_and_model(self, train_dataset_name, val_dataset_name, image_shape, label_shape,  model_type, batch_size=128, conv_layers=[32,64], dense_layers=[128,64], input_shape=(128, 128, 1), output_shape=10, activation='softmax'):
         clear_session()
         #'coords.tfrecord'
         #'coords_test.tfrecord'
-        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + train_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
-        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + val_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
-
-        for a in self.train_dataset:
-            image_batch, label_batch = a
-            print(f"Image batch shape: {image_batch.shape}")  # Image batch
-            print(f"Label batch shape: {label_batch.shape}")  # Label batch
+        self.train_dataset = tf.data.TFRecordDataset(self.dataset_folder + train_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape, batch_size=batch_size))
+        self.val_dataset = tf.data.TFRecordDataset(self.dataset_folder + val_dataset_name).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape, batch_size=batch_size))
 
     def train(self, params=None):
         start_time = time.time()
@@ -163,15 +163,16 @@ class section1(better_models):
     def initialise_data_and_model(self, train_dataset_name='coords.tfrecord', 
                                   val_dataset_name='coords_test.tfrecord', 
                                   model_type='regression', 
-                                  image_shape=[128, 128, 128, 1], 
-                                  label_shape=[128, 2], 
+                                  image_shape=[128, 128, 1], 
+                                  label_shape=[2], 
                                   conv_layers=[32, 64], 
                                   dense_layers=[128, 64], 
                                   input_shape=(128, 128, 1), 
                                   output_shape=2, 
+                                  batch_size=128,
                                   activation='linear'):
         
-        super().initialise_data_and_model(train_dataset_name=train_dataset_name, val_dataset_name=val_dataset_name, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
+        super().initialise_data_and_model(train_dataset_name=train_dataset_name, val_dataset_name=val_dataset_name, image_shape=image_shape, label_shape=label_shape, model_type=model_type, conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation, batch_size=batch_size)
     
         self.model = mymodels.RegressionModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=input_shape, output_shape=output_shape, activation=activation)
         trainable_params = self.model.compile()

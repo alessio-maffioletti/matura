@@ -13,8 +13,8 @@ class Optimizer:
             conv_layers = [max(1, int(layer * factor)) for layer in conv_layers if layer > 1]
             dense_layers = [max(1, int(layer * factor)) for layer in dense_layers if layer > 1]
 
-        conv_layers = [layer for layer in conv_layers if layer >= 4]
-        dense_layers = [layer for layer in dense_layers if layer >= 8]
+        conv_layers = [layer for layer in conv_layers if layer >= 2]
+        dense_layers = [layer for layer in dense_layers if layer >= 2]
 
         return conv_layers, dense_layers
 
@@ -48,7 +48,7 @@ class Optimizer:
         plt.show()
 
 
-    def optimize(self, model, conv_layers, dense_layers, target, max_iter=10, layer_factor=0.8, random_factor=None, max_failed_trains=2):
+    def optimize(self, model, conv_layers, dense_layers, target, train_dataset_name, test_dataset_name, batch_size=128, max_iter=10, layer_factor=0.8, random_factor=None, max_failed_trains=2):
         trainable_params_list = []
         training_time_list = []
         iteration_list = []
@@ -64,14 +64,14 @@ class Optimizer:
             print(f"Training model with: {conv_layers}, {dense_layers}")
 
             #model = sect1()
-            trainable_params = model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers)
-            params = {'epochs': int(80*1.5),
+            trainable_params = model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers, train_dataset_name=train_dataset_name, val_dataset_name=test_dataset_name, batch_size=batch_size)
+            params = {'epochs': int(120),
                     'tensorboard': False, 
                     'cp_callback': False,
                     'weights': None,
                     'stop_at': target,
                     'save_final': True,
-                    'weight_string': f'weights_{i}'
+                    'weight_string': f'_optimize_{i}'
                     }
 
         #try:

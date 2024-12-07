@@ -130,9 +130,11 @@ class ClassificationModel:
 
         for dense_layer in dense_layers:
             self.model.add(layers.Dense(dense_layer, activation='relu'))
-            self.model.add(layers.Dropout(0.1))
+            self.model.add(layers.Dropout(0.01))
 
         self.model.add(layers.Dense(output_shape, activation=activation) ) 
+
+        print(self.model.summary())
     
     def train(self, train_dataset, val_dataset, params, logs_folder=None, checkpoints_folder=None, metric='accuracy'):
         # Default parameters

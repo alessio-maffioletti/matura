@@ -122,25 +122,31 @@ class Dataset1:
 
         return X, coords, labels
     
-    def generate_dataset(self,train_coords_path, test_coords_path, train_labels_path, test_labels_path,  n_images=1280, ):
-        images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=n_images) #59904
-        images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=n_images) #9984
+    def generate_dataset(self,train_coords_path, test_coords_path, train_labels_path, test_labels_path, batch_size=128,  n_images=1280, whole_dataset=False):
+        if whole_dataset:
+            images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=self.X_train.shape[0]) #59904
+            images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=self.X_test.shape[0]) #9984
+        else:
+            images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=n_images) #59904
+            images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=n_images) #9984
 
         single_handler = TFRecordHandler(image_shape=(128, 128, 1), label_shape=(2,))
-        coords_dataset = single_handler.create_tf_dataset(images, coords)
-        coords_test_dataset = single_handler.create_tf_dataset(images_test, coords_test)
+        coords_dataset = single_handler.create_tf_dataset(images, coords, batch_size=batch_size)
+        coords_test_dataset = single_handler.create_tf_dataset(images_test, coords_test, batch_size=batch_size)
         single_handler.write_tfrecord(coords_dataset, train_coords_path, dual_input=False)
         single_handler.write_tfrecord(coords_test_dataset, test_coords_path, dual_input=False)
 
         dual_handler = TFRecordHandler(image_shape=(128, 128, 1), label_shape=(10,), coords_shape=(2,))
-        train_dataset = dual_handler.create_tf_dataset(images, labels, coords=coords)
-        test_dataset = dual_handler.create_tf_dataset(images_test, labels_test, coords=coords_test)
+        train_dataset = dual_handler.create_tf_dataset(images, labels, coords=coords, batch_size=batch_size)
+        test_dataset = dual_handler.create_tf_dataset(images_test, labels_test, coords=coords_test, batch_size=batch_size)
         dual_handler.write_tfrecord(train_dataset, train_labels_path, dual_input=True)
         dual_handler.write_tfrecord(test_dataset, test_labels_path, dual_input=True)
 
 class Dataset2:
-    def __init__(self, weights):
+    def __init__(self, weights, conv_layers, dense_layers):
         self.weights = weights
+        self.conv_layers = conv_layers
+        self.dense_layers = dense_layers
 
     def _parse_image_function(self, example_proto, image_shape=[128, 128, 128, 1], coords_shape=[128, 2], label_shape=[128, 10]):
         image_feature_description = {
@@ -237,7 +243,7 @@ class Dataset2:
         train_dataset = self.read_tfrecord(train_dataset_path)
         val_dataset = self.read_tfrecord(test_dataset_path)
 
-        model = mymodels.RegressionModel()
+        model = mymodels.RegressionModel(self.conv_layers, self.dense_layers, )
         model.compile()
         model.load_weights(self.weights)
 
