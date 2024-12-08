@@ -135,7 +135,7 @@ class ClassificationModel:
 
         self.model.add(layers.Dense(output_shape, activation=activation) ) 
 
-        print(self.model.summary())
+        #print(self.model.summary())
     
     def train(self, train_dataset, val_dataset, params, checkpoints_folder, metric='accuracy'):
         # Default parameters
@@ -272,6 +272,6 @@ class SingleModel(ClassificationModel):
         self.model = models.Model(inputs=[image_input, coordinates_input], outputs=output)
 
         # Print model summary
-        print(self.model.summary())
+        #print(self.model.summary())
 
     

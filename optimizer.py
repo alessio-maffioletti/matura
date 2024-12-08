@@ -1,6 +1,8 @@
 import random
 import matplotlib.pyplot as plt
 from tensorflow.keras.backend import clear_session
+import optuna
+
 
 
 class Optimizer:
@@ -66,7 +68,7 @@ class Optimizer:
             #model = sect1()
             trainable_params = model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers)
             params = {'epochs': 30,
-                    'tensorboard': False, 
+                    'tensorboard': True, 
                     'cp_callback': False,
                     'weights': None,
                     'stop_at': target,
@@ -112,3 +114,23 @@ class Optimizer:
 
         self.plot_results(trainable_params_list, training_time_list, iteration_list)
         return best_conv, best_dense, iter_num
+    
+
+class BayesianOptimizer:
+    def optimize_model(trial, model, initial_params, target):
+        conv_layers = [trial.suggest_int(f"conv_{i}_size", 4, 128) for i in range(len(initial_params['conv_layers']))]
+        dense_layers = [trial.suggest_int(f"dense_{i}_size", 4, 256) for i in range(len(initial_params['dense_layers']))]
+        learning_rate = trial.suggest_loguniform("learning_rate", 1e-4, 1e-2)
+
+        model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers)
+        params = {
+            'epochs': 30,
+            'learning_rate': learning_rate,
+            'stop_at': target,
+        }
+        reached_target, training_time = model.train(params)
+
+        if reached_target:
+            return training_time  # Minimize training time while reaching the target
+        else:
+            return float("inf")  # Penalize configurations that don't reach the target

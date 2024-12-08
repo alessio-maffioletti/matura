@@ -1,5 +1,5 @@
 main_folder = '../'
-dataset1_folder = main_folder + 'dataset_tfrecord_small' + '/'
+dataset1_folder = main_folder + 'dataset_tfrecord' + '/'
 dataset2_folder = main_folder + 'dataset2' + '/'
 
 TRAIN_SINGLE_PATH = dataset1_folder + 'train.tfrecord'

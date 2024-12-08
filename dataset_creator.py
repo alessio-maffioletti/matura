@@ -136,13 +136,12 @@ class Dataset1:
     
     def generate_dataset(self, train_size=1280, test_size=1280, whole_dataset=False):
         if whole_dataset:
-            images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=self.X_train.shape[0]) #59904
-            images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=self.X_test.shape[0]) #9984
-        else:
-            if train_size % BATCH_SIZE != 0:
-                train_size -= train_size % BATCH_SIZE
-            if test_size % BATCH_SIZE != 0:
-                test_size -= test_size % BATCH_SIZE
+            train_size = self.X_train.shape[0]
+            test_size = self.X_test.shape[0]
+        if train_size % BATCH_SIZE != 0:
+            train_size -= train_size % BATCH_SIZE
+        if test_size % BATCH_SIZE != 0:
+            test_size -= test_size % BATCH_SIZE
         
             images, coords, labels = self.create_dataset(self.X_train, self.y_train, n_images=train_size) #59904
             images_test, coords_test, labels_test = self.create_dataset(self.X_test, self.y_test, n_images=test_size) #9984
