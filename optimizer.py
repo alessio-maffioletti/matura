@@ -2,7 +2,8 @@ import random
 import matplotlib.pyplot as plt
 from tensorflow.keras.backend import clear_session
 import optuna
-
+import json
+from constants import *
 
 
 class Optimizer:
@@ -117,20 +118,89 @@ class Optimizer:
     
 
 class BayesianOptimizer:
-    def optimize_model(trial, model, initial_params, target):
-        conv_layers = [trial.suggest_int(f"conv_{i}_size", 4, 128) for i in range(len(initial_params['conv_layers']))]
-        dense_layers = [trial.suggest_int(f"dense_{i}_size", 4, 256) for i in range(len(initial_params['dense_layers']))]
-        learning_rate = trial.suggest_loguniform("learning_rate", 1e-4, 1e-2)
+    def __init__(self):
+        self.study = optuna.create_study(direction="minimize")
+        self.best_time = float("inf")
+
+    def _set_initial_params(self, initial_params):
+        # Define default parameters
+        default_params = {
+            'min_conv_layers': 1,
+            'max_conv_layers': 5,
+            'min_dense_layers': 1,
+            'max_dense_layers': 5,
+            'min_conv_size': 32,
+            'max_conv_size': 128,
+            'min_dense_size': 64,
+            'max_dense_size': 256,
+            'epochs': 10
+        }
+
+        # If initial_params is None, use the default parameters
+        if initial_params is None:
+            initial_params = default_params
+        else:
+            # Otherwise, fill missing keys with the default value
+            for key, value in default_params.items():
+                initial_params.setdefault(key, value)
+
+        return initial_params
+    def write(self, trial_params, training_time):
+        # Create a dictionary for the new trial
+        trial_data = {
+            "training_time": training_time,
+            "params": trial_params
+        }
+        
+        # Try to read the existing file, or create an empty list if it doesn't exist
+        try:
+            with open(OPTIMIZER_FOLDER + "trials.json", "r") as file:
+                trials = json.load(file)
+                file.close()
+        except (FileNotFoundError, json.JSONDecodeError):
+            trials = []
+
+        # Append the new trial data
+        trials.append(trial_data)
+
+        # Sort trials by training time (ascending order)
+        trials_sorted = sorted(trials, key=lambda x: x['training_time'])
+
+        # Write the sorted trials back to the JSON file
+        with open(OPTIMIZER_FOLDER + "trials.json", "w") as file:
+            json.dump(trials_sorted, file, indent=4)
+            file.close()
+
+    def optimize(self, model, target, initial_params=None, max_trials=20, write_to_file=False):
+        self.study.optimize(lambda trial: self.optimize_model(trial, model, target, initial_params, write_to_file), n_trials=max_trials)
+        print("Best trial:", self.study.best_trial.params)
+
+        return self.study.best_trial
+
+
+
+    def optimize_model(self, trial, model, target, initial_params, write_to_file):
+        initial_params = self._set_initial_params(initial_params)
+
+        num_conv_layers = trial.suggest_int("num_conv_layers", initial_params['min_conv_layers'], initial_params['max_conv_layers'])
+        num_dense_layers = trial.suggest_int("num_dense_layers", initial_params['min_dense_layers'], initial_params['max_dense_layers'])
+
+        conv_layers = [trial.suggest_int(f"conv_{i}_size", initial_params['min_conv_size'], initial_params['max_conv_size']) for i in range(num_conv_layers)]
+        dense_layers = [trial.suggest_int(f"dense_{i}_size", initial_params['min_dense_size'], initial_params['max_dense_size']) for i in range(num_dense_layers)]
 
         model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers)
-        params = {
-            'epochs': 30,
-            'learning_rate': learning_rate,
-            'stop_at': target,
-        }
+        params = {'epochs': initial_params['epochs'],
+                'stop_at': target,
+                'max_time': self.best_time,
+                }
         reached_target, training_time = model.train(params)
 
+        self.best_time = min(self.best_time, training_time)
+
+        if write_to_file:
+            self.write(trial.params, training_time)
+
         if reached_target:
-            return training_time  # Minimize training time while reaching the target
+            return training_time
         else:
-            return float("inf")  # Penalize configurations that don't reach the target
+            return float("inf")

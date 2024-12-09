@@ -9,6 +9,7 @@ from tensorflow.keras.callbacks import TensorBoard, Callback
 import subprocess
 import random
 from constants import *
+import time
 
 random.seed(42)
 np.random.seed(42)
@@ -59,6 +60,23 @@ class StopAtMAE(Callback):
             print(f"\nTarget MAE of {self.target_mae} reached! Stopping training.")
             self.model.stop_training = True
             self.reached_target = True
+
+class StopAtTime(Callback):
+    def __init__(self, time_limit):
+        super().__init__()
+        self.time_limit = time_limit  # Maximum allowable training time in seconds
+        self.start_time = None
+
+    def on_train_begin(self, logs=None):
+        # Record the start time of training
+        self.start_time = time.time()
+
+    def on_epoch_end(self, epoch, logs=None):
+        # Check elapsed time
+        elapsed_time = time.time() - self.start_time
+        if elapsed_time > self.time_limit:
+            print(f"\nTime limit of {self.time_limit} seconds exceeded. Stopping training.")
+            self.model.stop_training = True
 
 
 def print_trainable_params(model, figsize=(2, 2), threshold=5):
@@ -128,10 +146,11 @@ class ClassificationModel:
             self.model.add(layers.MaxPooling2D((2, 2)))
 
         self.model.add(layers.Flatten())
+        #self.model.add(layers.GlobalAveragePooling2D())
 
         for dense_layer in dense_layers:
             self.model.add(layers.Dense(dense_layer, activation='relu'))
-            self.model.add(layers.Dropout(0.01))
+            self.model.add(layers.Dropout(0.01, seed=42))
 
         self.model.add(layers.Dense(output_shape, activation=activation) ) 
 
@@ -141,13 +160,13 @@ class ClassificationModel:
         # Default parameters
         default_params = {
             'epochs': 10,
-            'batch_size': 512,
-            'tensorboard': True,
-            'cp_callback': True,
-            'save_final': True,
+            'tensorboard': False,
+            'cp_callback': False,
+            'save_final': False,
             'weights': None,
             'stop_at': None,
             'weight_string': 'final',
+            'max_time': None,
         }
         
         # Merge provided params with defaults
@@ -195,6 +214,9 @@ class ClassificationModel:
                 raise ValueError(f"Unknown metric: {metric}")
         else:
             early_stopping = None
+
+        if params['max_time']:
+            callbacks.append(StopAtTime(params['max_time']))
 
         # Train the model
         model_run = self.model.fit(
@@ -250,7 +272,8 @@ class SingleModel(ClassificationModel):
             x = layers.Conv2D(conv_layer, kernel_size=(3, 3), activation='relu')(x)
             x = layers.MaxPooling2D(pool_size=(2, 2))(x)
 
-        x = layers.Flatten()(x)
+        #x = layers.Flatten()(x)
+        x = layers.GlobalAveragePooling2D()(x)
 
         # Coordinates Input branch
         coordinates_input = layers.Input(shape=COORDS_SHAPE, name='coords')
@@ -264,7 +287,7 @@ class SingleModel(ClassificationModel):
         z = combined
         for dense_layer in dense_layers:
             z = layers.Dense(dense_layer, activation='relu')(z)
-            z = layers.Dropout(0.01)(z)  # Example dropout layer
+            z = layers.Dropout(0.01, seed=42)(z)  # Example dropout layer
 
         output = layers.Dense(LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, name='label')(z)
 

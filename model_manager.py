@@ -7,6 +7,8 @@ from tensorflow.keras.backend import clear_session
 import time
 from constants import *
 
+sns.set_style("dark")
+
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 clear_session()
 
@@ -149,6 +151,54 @@ class better_models:
         axs[1].set_ylabel(list(history_model)[1])
 
         plt.show()
+    
+    def plot_sb(self):
+        history_model = self.run.history
+
+        # Create a figure with two subplots
+        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
+
+        # Plot training and validation accuracy
+        sns.lineplot(
+            x=self.run.epoch, 
+            y=history_model[list(history_model)[0]], 
+            label="Training accuracy", 
+            color="blue", 
+            ax=axs[0]
+        )
+        sns.lineplot(
+            x=self.run.epoch,
+            y=history_model[list(history_model)[2]], 
+            label="Validation accuracy", 
+            color="red", 
+            ax=axs[0]
+        )
+        axs[0].set_xlabel("Epochs")
+        axs[0].set_ylabel("Accuracy")
+        axs[0].legend()
+
+        # Plot training and validation loss
+        sns.lineplot(
+            x=self.run.epoch, 
+            y=history_model[list(history_model)[1]], 
+            label="Training loss", 
+            color="blue", 
+            ax=axs[1]
+        )
+        sns.lineplot(
+            x=self.run.epoch,
+            y=history_model[list(history_model)[3]], 
+            label="Validation loss", 
+            color="red", 
+            ax=axs[1]
+        )
+        axs[1].set_xlabel("Epochs")
+        axs[1].set_ylabel("Loss")
+        axs[1].legend()
+
+        plt.tight_layout()
+        plt.show()
+
 
 class section1(better_models):
     def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
@@ -195,3 +245,23 @@ class single_model(better_models):
     
     def train(self, params=None):
         return super().train(SINGLE_CHECKPOINT_FOLDER, params)
+    
+    def eval_random(self):
+        for a in self.val_dataset:  # Iterate through the dataset
+            (image_batch, coords_batch), label_batch = a  # Get a batch of images and labels
+            image_batch = image_batch.numpy()  # Convert to numpy for easier handling
+            coords_batch = coords_batch.numpy()
+            label_batch = label_batch.numpy()
+            random_sample = np.random.randint(0, image_batch.shape[0])  # Randomly select an image from the batch
+
+            # Extract the selected image and label
+            image = image_batch[random_sample]
+            actual = label_batch[random_sample]
+
+            # Make predictions
+            predictions = self.model.predict((image_batch, coords_batch))
+            predicted = predictions[random_sample]
+
+            self._plot_random(image, predicted, actual)
+
+            break  # Only evaluate one random sample

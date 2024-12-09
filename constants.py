@@ -15,6 +15,8 @@ SECT1_CHECKPOINT_FOLDER = main_folder + 'checkpoints_sect1' + '/'
 SECT2_CHECKPOINT_FOLDER = main_folder + 'checkpoints_sect2' + '/'
 SINGLE_CHECKPOINT_FOLDER = main_folder + 'checkpoints_single' + '/'
 
+OPTIMIZER_FOLDER = main_folder + 'optimizers' + '/'
+
 LOGS_FOLDER = main_folder + 'logs' + '/'
 
 BATCH_SIZE = 32
