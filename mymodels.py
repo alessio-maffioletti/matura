@@ -6,6 +6,7 @@ import os
 import tensorflow as tf
 from tensorflow.keras import layers, models
 from tensorflow.keras.callbacks import TensorBoard, Callback
+from tensorflow.keras import optimizers
 import subprocess
 import random
 from constants import *
@@ -130,33 +131,70 @@ def print_trainable_params(model, figsize=(2, 2), threshold=5):
 
     return total_trainable_params
 
+def _set_initial_params(initial_params):
+        # Define default parameters
+        default_params = {
+            'flatten_type': 'flatten',
+            'conv_layers': [32, 64],
+            'dense_layers': [128, 64],
+            'activation': 'relu',
+            'optimizer': 'adam',
+            'learning_rate': 0.001,
+            'dropout': 0.01
+            }
+
+        # If initial_params is None, use the default parameters
+        if initial_params is None:
+            initial_params = default_params
+        else:
+            # Otherwise, fill missing keys with the default value
+            for key, value in default_params.items():
+                initial_params.setdefault(key, value)
+
+        return initial_params
+
 
 
 class ClassificationModel:
-    def __init__(self, input_shape, output_shape, activation, conv_layers=[32,64], dense_layers=[128,64]):
+    def __init__(self, input_shape, output_shape, activation, conv_layers=[32,64], dense_layers=[128,64], trainable_params=None):
         self.name = "model"
-
+        
+        self.trainable_params = _set_initial_params(trainable_params)
+        
         self.model = models.Sequential()
 
 
         self.model.add(layers.Input(input_shape))
 
-        for conv_layer in conv_layers:
-            self.model.add(layers.Conv2D(conv_layer, (3, 3), activation='relu'))
+        for conv_layer in self.trainable_params['conv_layers']:
+            self.model.add(layers.Conv2D(conv_layer, (3, 3), activation=self.trainable_params['activation']))
             self.model.add(layers.MaxPooling2D((2, 2)))
 
-        self.model.add(layers.Flatten())
-        #self.model.add(layers.GlobalAveragePooling2D())
+        if self.trainable_params['flatten_type'] == 'flatten':
+            self.model.add(layers.Flatten())
+        elif self.trainable_params['flatten_type'] == 'global_average':
+            self.model.add(layers.GlobalAveragePooling2D())
 
-        for dense_layer in dense_layers:
-            self.model.add(layers.Dense(dense_layer, activation='relu'))
-            self.model.add(layers.Dropout(0.01, seed=42))
+        for dense_layer in self.trainable_params['dense_layers']:
+            self.model.add(layers.Dense(dense_layer, activation=self.trainable_params['activation']))
+            self.model.add(layers.Dropout(self.trainable_params['dropout'], seed=42))
 
-        self.model.add(layers.Dense(output_shape, activation=activation) ) 
+        self.model.add(layers.Dense(output_shape, activation=activation) )
 
         #print(self.model.summary())
     
-    def train(self, train_dataset, val_dataset, params, checkpoints_folder, metric='accuracy'):
+    def compile(self, optimizer, loss, metrics):
+        if self.trainable_params['optimizer'] == 'adam':
+            optimizer = optimizers.Adam(learning_rate=self.trainable_params['learning_rate'])
+        elif self.trainable_params['optimizer'] == 'sgd':
+            optimizer = optimizers.SGD(learning_rate=self.trainable_params['learning_rate'])
+        else:
+            raise ValueError("Invalid optimizer name or learning rate, please choose between adam or sgd")
+        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        trainable_params = print_trainable_params(self.model)
+        return trainable_params
+    
+    def train(self, train_dataset, val_dataset, metric, params, checkpoints_folder):
         # Default parameters
         default_params = {
             'epochs': 10,
@@ -232,10 +270,6 @@ class ClassificationModel:
 
         return model_run, early_stopping.reached_target if early_stopping else False
     
-    def compile(self, optimizer, loss, metrics):
-        self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
-        trainable_params = print_trainable_params(self.model)
-        return trainable_params
 
     def load_weights(self, path):
         self.model.load_weights(path)
@@ -252,8 +286,14 @@ class ClassificationModel:
         return self.model.predict(input, verbose=0)
 
 class RegressionModel(ClassificationModel):
-    def train(self, train_dataset, val_dataset, params,checkpoints_folder, metric='mae'):
-        return super().train(train_dataset, val_dataset, params,checkpoints_folder, metric)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.name = "regression_model"
+    
+    def train(self, **kwargs):
+        if not 'metric' in kwargs:
+            kwargs['metric'] = 'mae'
+        return super().train(**kwargs)
     
     def compile(self, optimizer='adam', loss='mean_squared_error', metrics=['mean_absolute_error']):
         return super().compile(optimizer, loss, metrics)

@@ -120,7 +120,7 @@ class Optimizer:
 class BayesianOptimizer:
     def __init__(self):
         self.study = optuna.create_study(direction="minimize")
-        self.best_time = float("inf")
+        self.best_time = 600
 
     def _set_initial_params(self, initial_params):
         # Define default parameters
@@ -133,7 +133,12 @@ class BayesianOptimizer:
             'max_conv_size': 128,
             'min_dense_size': 64,
             'max_dense_size': 256,
-            'epochs': 10
+            'epochs': 10,
+            'flatten_type': ['global_average', 'flatten'],
+            'activation': ['relu', 'sigmoid'],
+            'optimizer': ['adam', 'sgd'],
+            'learning_rate': [0.001, 0.01],
+            'dropout': [0.0, 0.1],
         }
 
         # If initial_params is None, use the default parameters
@@ -145,6 +150,12 @@ class BayesianOptimizer:
                 initial_params.setdefault(key, value)
 
         return initial_params
+    
+    def _convert_to_params(self, trial_params, conv_layers, dense_layers):
+        trial_params['conv_layers'] = conv_layers
+        trial_params['dense_layers'] = dense_layers
+
+        return trial_params
     def write(self, trial_params, training_time):
         # Create a dictionary for the new trial
         trial_data = {
@@ -188,7 +199,17 @@ class BayesianOptimizer:
         conv_layers = [trial.suggest_int(f"conv_{i}_size", initial_params['min_conv_size'], initial_params['max_conv_size']) for i in range(num_conv_layers)]
         dense_layers = [trial.suggest_int(f"dense_{i}_size", initial_params['min_dense_size'], initial_params['max_dense_size']) for i in range(num_dense_layers)]
 
-        model.initialise_data_and_model(conv_layers=conv_layers, dense_layers=dense_layers)
+        flatten_type = trial.suggest_categorical("flatten_type", initial_params['flatten_type'])
+        activation = trial.suggest_categorical("activation", initial_params['activation'])
+        optimizer = trial.suggest_categorical("optimizer", initial_params['optimizer'])
+        learning_rate = trial.suggest_float("learning_rate", initial_params['learning_rate'][0], initial_params['learning_rate'][1])
+        dropout = trial.suggest_float("dropout", initial_params['dropout'][0], initial_params['dropout'][1])
+
+        
+        suggested_params = self._convert_to_params(trial.params, conv_layers, dense_layers)
+        
+
+        model.initialise_data_and_model(suggested_params)
         params = {'epochs': initial_params['epochs'],
                 'stop_at': target,
                 'max_time': self.best_time,
@@ -198,6 +219,7 @@ class BayesianOptimizer:
         self.best_time = min(self.best_time, training_time)
 
         if write_to_file:
+            print("writing to file")
             self.write(trial.params, training_time)
 
         if reached_target:

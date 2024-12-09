@@ -80,10 +80,10 @@ class better_models:
         self.train_dataset = tf.data.TFRecordDataset(train_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
         self.val_dataset = tf.data.TFRecordDataset(val_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
 
-    def train(self, checkpoints_folder, params):
+    def train(self, **kwargs):
         start_time = time.time()
         
-        self.run, reached_target = self.model.train(self.train_dataset, self.val_dataset, params, checkpoints_folder)
+        self.run, reached_target = self.model.train(train_dataset=self.train_dataset, val_dataset=self.val_dataset, **kwargs)
         
         training_time = time.time() - start_time
         
@@ -201,16 +201,16 @@ class better_models:
 
 
 class section1(better_models):
-    def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
+    def initialise_data_and_model(self, train_params=None):
         
         super().initialise_data_and_model(train_dataset_path=TRAIN_COORDS_PATH, val_dataset_path=TEST_COORDS_PATH, image_shape=IMAGE_SHAPE, label_shape=COORDS_SHAPE)
     
-        self.model = mymodels.RegressionModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=INPUT_SHAPE, output_shape=COORDS_OUTPUT_SHAPE, activation=REGRESSION_ACTIVATION)
+        self.model = mymodels.RegressionModel(trainable_params=train_params, input_shape=INPUT_SHAPE, output_shape=COORDS_OUTPUT_SHAPE, activation=REGRESSION_ACTIVATION)
         trainable_params = self.model.compile()
         return trainable_params
         
     def train(self, params=None):
-        return super().train(SECT1_CHECKPOINT_FOLDER, params)
+        return super().train(checkpoints_folder=SECT1_CHECKPOINT_FOLDER, params=params)
     
     def _plot_random(self, image, predicted, actual):
         plt.imshow(image, cmap='gray')
