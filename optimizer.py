@@ -118,13 +118,15 @@ class Optimizer:
     
 
 class BayesianOptimizer:
-    def __init__(self):
-        self.study = optuna.create_study(direction="minimize")
-        self.best_time = 600
+    def __init__(self, starting_values=None, direction='minimize'):
+        self.study = optuna.create_study(direction=direction)
+        if starting_values is not None:
+            self.study.enqueue_trial(starting_values)
+        self.best_time = MAX_TRAIN_TIME
 
-    def _set_initial_params(self, initial_params):
+    def _set_initial_params(self, initial_params, default_direction='min'):
         # Define default parameters
-        default_params = {
+        default_params_max = {
             'min_conv_layers': 1,
             'max_conv_layers': 5,
             'min_dense_layers': 1,
@@ -138,8 +140,31 @@ class BayesianOptimizer:
             'activation': ['relu', 'sigmoid'],
             'optimizer': ['adam', 'sgd'],
             'learning_rate': [0.001, 0.01],
-            'dropout': [0.0, 0.1],
+            'dropout': [0.0, 0.01],
         }
+        default_params_min = {
+            'min_conv_layers': 1,
+            'max_conv_layers': 5,
+            'min_dense_layers': 1,
+            'max_dense_layers': 5,
+            'min_conv_size': 4,
+            'max_conv_size': 256,
+            'min_dense_size': 4,
+            'max_dense_size': 256,
+            'epochs': 10,
+            'flatten_type': ['flatten'],
+            'activation': ['relu'],
+            'optimizer': ['adam'],
+            'learning_rate': [0.001],
+            'dropout': [0.01],
+        }
+
+        if default_direction == 'max':
+            default_params = default_params_max
+        elif default_direction == 'min':
+            default_params = default_params_min
+        else:
+            raise ValueError("Default direction must be 'max' or 'min'")
 
         # If initial_params is None, use the default parameters
         if initial_params is None:
@@ -156,10 +181,11 @@ class BayesianOptimizer:
         trial_params['dense_layers'] = dense_layers
 
         return trial_params
-    def write(self, trial_params, training_time):
+    def write(self, trial_params, training_time, trial_number):
         # Create a dictionary for the new trial
         trial_data = {
             "training_time": training_time,
+            'trial_number': trial_number,
             "params": trial_params
         }
         
@@ -182,16 +208,16 @@ class BayesianOptimizer:
             json.dump(trials_sorted, file, indent=4)
             file.close()
 
-    def optimize(self, model, target, initial_params=None, max_trials=20, write_to_file=False):
-        self.study.optimize(lambda trial: self.optimize_model(trial, model, target, initial_params, write_to_file), n_trials=max_trials)
+    def optimize(self, max_trials=20, **kwargs):
+        self.study.optimize(lambda trial: self.optimize_model(trial, **kwargs), n_trials=max_trials)
         print("Best trial:", self.study.best_trial.params)
 
         return self.study.best_trial
 
 
 
-    def optimize_model(self, trial, model, target, initial_params, write_to_file):
-        initial_params = self._set_initial_params(initial_params)
+    def optimize_model(self, trial, model, target, initial_params=None, write_to_file=False, default_direction='min'):
+        initial_params = self._set_initial_params(initial_params, default_direction=default_direction)
 
         num_conv_layers = trial.suggest_int("num_conv_layers", initial_params['min_conv_layers'], initial_params['max_conv_layers'])
         num_dense_layers = trial.suggest_int("num_dense_layers", initial_params['min_dense_layers'], initial_params['max_dense_layers'])
@@ -199,30 +225,45 @@ class BayesianOptimizer:
         conv_layers = [trial.suggest_int(f"conv_{i}_size", initial_params['min_conv_size'], initial_params['max_conv_size']) for i in range(num_conv_layers)]
         dense_layers = [trial.suggest_int(f"dense_{i}_size", initial_params['min_dense_size'], initial_params['max_dense_size']) for i in range(num_dense_layers)]
 
-        flatten_type = trial.suggest_categorical("flatten_type", initial_params['flatten_type'])
-        activation = trial.suggest_categorical("activation", initial_params['activation'])
-        optimizer = trial.suggest_categorical("optimizer", initial_params['optimizer'])
-        learning_rate = trial.suggest_float("learning_rate", initial_params['learning_rate'][0], initial_params['learning_rate'][1])
-        dropout = trial.suggest_float("dropout", initial_params['dropout'][0], initial_params['dropout'][1])
+        
+        trial.suggest_categorical("flatten_type", initial_params['flatten_type'])
+        trial.suggest_categorical("activation", initial_params['activation'])
+        trial.suggest_categorical("optimizer", initial_params['optimizer'])
+
+        if not len(initial_params['learning_rate']) == 1:
+            trial.suggest_float("learning_rate", initial_params['learning_rate'][0], initial_params['learning_rate'][1])
+        if not len(initial_params['dropout']) == 1:
+            trial.suggest_float("dropout", initial_params['dropout'][0], initial_params['dropout'][1])
 
         
         suggested_params = self._convert_to_params(trial.params, conv_layers, dense_layers)
         
+        try:
+            model.initialise_data_and_model(suggested_params)
+            params = {'epochs': initial_params['epochs'],
+                    'stop_at': target,
+                    'max_time': self.best_time + MAX_TRAIN_TIME,
+                    'show_progress': False,
+                    'save_final': True,
+                    'weight_string': f'_optimize_{trial.number}'
+                    }
+            reached_target, training_time, best_val_loss = model.train(params)
 
-        model.initialise_data_and_model(suggested_params)
-        params = {'epochs': initial_params['epochs'],
-                'stop_at': target,
-                'max_time': self.best_time,
-                }
-        reached_target, training_time = model.train(params)
+            if not reached_target:
+                penalty = training_time / best_val_loss
+            else:
+                penalty = training_time
+            
+            #model.plot()
 
-        self.best_time = min(self.best_time, training_time)
+            self.best_time = min(self.best_time, training_time)
 
-        if write_to_file:
-            print("writing to file")
-            self.write(trial.params, training_time)
+            if reached_target and write_to_file:
+                print("writing to file")
+                self.write(trial.params, training_time, trial.number)
 
-        if reached_target:
-            return training_time
-        else:
-            return float("inf")
+        except Exception as e:
+            print(e)
+            penalty = float('inf')
+
+        return penalty

@@ -163,10 +163,9 @@ class Dataset1:
         del test_dataset
 
 class Dataset2:
-    def __init__(self, weights, conv_layers, dense_layers):
+    def __init__(self, weights, trainable_params):
         self.weights = weights
-        self.conv_layers = conv_layers
-        self.dense_layers = dense_layers
+        self.trainable_params = trainable_params
 
     def _parse_image_function(self,
                                 example_proto, 
@@ -272,7 +271,7 @@ class Dataset2:
         train_dataset = self.read_tfrecord(filename=TRAIN_SINGLE_PATH)
         val_dataset = self.read_tfrecord(filename=TEST_SINGLE_PATH)
 
-        model = mymodels.RegressionModel(INPUT_SHAPE, COORDS_OUTPUT_SHAPE, REGRESSION_ACTIVATION, self.conv_layers, self.dense_layers)
+        model = mymodels.RegressionModel(INPUT_SHAPE, COORDS_OUTPUT_SHAPE, REGRESSION_ACTIVATION, trainable_params=self.trainable_params)
         model.compile()
         model.load_weights(self.weights)
 

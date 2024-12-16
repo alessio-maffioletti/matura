@@ -80,14 +80,19 @@ class better_models:
         self.train_dataset = tf.data.TFRecordDataset(train_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
         self.val_dataset = tf.data.TFRecordDataset(val_dataset_path).map(lambda example_proto: _parse_image_function(example_proto, image_shape=image_shape, label_shape=label_shape))
 
+
     def train(self, **kwargs):
         start_time = time.time()
         
         self.run, reached_target = self.model.train(train_dataset=self.train_dataset, val_dataset=self.val_dataset, **kwargs)
         
         training_time = time.time() - start_time
+
+        #best_val_loss
+        best_val_loss = self.run.history[list(self.run.history)[3]][-1]
+
         
-        return reached_target, round(training_time, 1)
+        return reached_target, round(training_time, 1), best_val_loss
     def _plot_random(self, image, predicted, actual):
         plt.imshow(image, cmap='gray')
         #plt.scatter(predicted[0], predicted[1], color='red', label='Predicted')
@@ -115,8 +120,8 @@ class better_models:
 
             break  # Only evaluate one random sample
 
+        
     def plot(self):
-
         history_model = self.run.history
         #print("The history has the following data: ", history_model.keys())
 
@@ -221,30 +226,30 @@ class section1(better_models):
         plt.show()
     
 class section2(better_models):
-    def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
+    def initialise_data_and_model(self, train_params=None):
         
         super().initialise_data_and_model(train_dataset_path=TRAIN_CROPPED_PATH, val_dataset_path=TEST_CROPPED_PATH, image_shape=CROPPED_IMAGE_SHAPE, label_shape=LABELS_SHAPE)
 
-        self.model = mymodels.ClassificationModel(conv_layers=conv_layers, dense_layers=dense_layers, input_shape=CROPPED_INPUT_SHAPE, output_shape=LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION)
+        self.model = mymodels.ClassificationModel(input_shape=CROPPED_INPUT_SHAPE, output_shape=LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, trainable_params=train_params)
         trainable_params = self.model.compile(optimizer='adam',loss='categorical_crossentropy', metrics=['accuracy'] )
     
         return trainable_params
     
     def train(self, params=None):
-        return super().train(SECT2_CHECKPOINT_FOLDER, params)
+        return super().train(checkpoints_folder=SECT2_CHECKPOINT_FOLDER, params=params, metric='accuracy')
     
 class single_model(better_models):
-    def initialise_data_and_model(self, conv_layers=[32, 64], dense_layers=[128, 64]):
+    def initialise_data_and_model(self, train_params=None):
         
         self.train_dataset = tf.data.TFRecordDataset(TRAIN_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=IMAGE_SHAPE, label_shape=LABELS_SHAPE))
         self.val_dataset = tf.data.TFRecordDataset(TEST_SINGLE_PATH).map(lambda example_proto: _parse_image_function_2(example_proto, image_shape=IMAGE_SHAPE, label_shape=LABELS_SHAPE))
         
-        self.model = mymodels.SingleModel(conv_layers=conv_layers, dense_layers=dense_layers)
+        self.model = mymodels.SingleModel(trainable_params=train_params)
         trainable_params = self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return trainable_params    
     
     def train(self, params=None):
-        return super().train(SINGLE_CHECKPOINT_FOLDER, params)
+        return super().train(checkpoints_folder=SINGLE_CHECKPOINT_FOLDER, params=params, metric='accuracy')
     
     def eval_random(self):
         for a in self.val_dataset:  # Iterate through the dataset

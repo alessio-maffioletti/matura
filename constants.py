@@ -19,7 +19,11 @@ OPTIMIZER_FOLDER = main_folder + 'optimizers' + '/'
 
 LOGS_FOLDER = main_folder + 'logs' + '/'
 
-BATCH_SIZE = 32
+BATCH_SIZE = 64
+
+MAX_TRAIN_TIME = 300
+
+RANDOM_SEED = 42
 
 IMAGE_SHAPE = [128,128,1]
 CROPPED_IMAGE_SHAPE = [42,42,1]
