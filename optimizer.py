@@ -216,7 +216,7 @@ class BayesianOptimizer:
 
 
 
-    def optimize_model(self, trial, model, target, initial_params=None, write_to_file=False, default_direction='min'):
+    def optimize_model(self, trial, model, target, initial_params=None, write_to_file=False, default_direction='min', penalty_blob='multiply'):
         initial_params = self._set_initial_params(initial_params, default_direction=default_direction)
 
         num_conv_layers = trial.suggest_int("num_conv_layers", initial_params['min_conv_layers'], initial_params['max_conv_layers'])
@@ -250,7 +250,12 @@ class BayesianOptimizer:
             reached_target, training_time, best_val_loss = model.train(params)
 
             if not reached_target:
-                penalty = training_time / best_val_loss
+                if penalty_blob == 'multiply':
+                    penalty = training_time * best_val_loss
+                elif penalty_blob == 'divide':  
+                    penalty = training_time / best_val_loss
+                else:
+                    raise ValueError("Penalty blob must be 'multiply' or 'divide'")
             else:
                 penalty = training_time
             

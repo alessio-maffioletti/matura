@@ -1,0 +1,3050 @@
+[
+    {
+        "training_time": 17.3,
+        "trial_number": 143,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 18,
+            "conv_2_size": 19,
+            "conv_3_size": 39,
+            "conv_4_size": 49,
+            "dense_0_size": 71,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 17.5,
+        "trial_number": 161,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 20,
+            "conv_2_size": 23,
+            "conv_3_size": 46,
+            "conv_4_size": 60,
+            "dense_0_size": 74,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 18.5,
+        "trial_number": 102,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 18,
+            "conv_2_size": 12,
+            "conv_3_size": 167,
+            "conv_4_size": 34,
+            "dense_0_size": 170,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 18.9,
+        "trial_number": 82,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 23,
+            "conv_2_size": 23,
+            "conv_3_size": 69,
+            "conv_4_size": 88,
+            "dense_0_size": 41,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.0,
+        "trial_number": 100,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 16,
+            "conv_2_size": 24,
+            "conv_3_size": 169,
+            "conv_4_size": 38,
+            "dense_0_size": 182,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.1,
+        "trial_number": 99,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 16,
+            "conv_2_size": 25,
+            "conv_3_size": 163,
+            "conv_4_size": 40,
+            "dense_0_size": 170,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.3,
+        "trial_number": 97,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 4,
+            "conv_2_size": 25,
+            "conv_3_size": 168,
+            "conv_4_size": 99,
+            "dense_0_size": 156,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.5,
+        "trial_number": 101,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 17,
+            "conv_2_size": 23,
+            "conv_3_size": 163,
+            "conv_4_size": 42,
+            "dense_0_size": 177,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.6,
+        "trial_number": 154,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 18,
+            "conv_2_size": 19,
+            "conv_3_size": 165,
+            "conv_4_size": 78,
+            "dense_0_size": 166,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.7,
+        "trial_number": 104,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 5,
+            "conv_1_size": 18,
+            "conv_2_size": 13,
+            "conv_3_size": 197,
+            "conv_4_size": 44,
+            "dense_0_size": 171,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.8,
+        "trial_number": 33,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 4,
+            "conv_1_size": 8,
+            "conv_2_size": 147,
+            "dense_0_size": 54,
+            "dense_1_size": 88,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 19.9,
+        "trial_number": 189,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 8,
+            "conv_2_size": 23,
+            "conv_3_size": 175,
+            "conv_4_size": 93,
+            "dense_0_size": 68,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 20.6,
+        "trial_number": 166,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 10,
+            "conv_2_size": 12,
+            "conv_3_size": 159,
+            "conv_4_size": 39,
+            "dense_0_size": 91,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 20.6,
+        "trial_number": 197,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 4,
+            "conv_2_size": 35,
+            "conv_3_size": 45,
+            "conv_4_size": 55,
+            "dense_0_size": 64,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 20.7,
+        "trial_number": 198,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 29,
+            "conv_2_size": 37,
+            "conv_3_size": 40,
+            "conv_4_size": 54,
+            "dense_0_size": 57,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 20.8,
+        "trial_number": 199,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 29,
+            "conv_2_size": 39,
+            "conv_3_size": 46,
+            "conv_4_size": 58,
+            "dense_0_size": 57,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 20.9,
+        "trial_number": 160,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 21,
+            "conv_2_size": 21,
+            "conv_3_size": 46,
+            "conv_4_size": 59,
+            "dense_0_size": 70,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 21.0,
+        "trial_number": 72,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 26,
+            "conv_2_size": 56,
+            "conv_3_size": 52,
+            "conv_4_size": 88,
+            "dense_0_size": 53,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 21.2,
+        "trial_number": 172,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 12,
+            "conv_2_size": 16,
+            "conv_3_size": 141,
+            "conv_4_size": 36,
+            "dense_0_size": 178,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 21.3,
+        "trial_number": 165,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 11,
+            "conv_2_size": 15,
+            "conv_3_size": 156,
+            "conv_4_size": 38,
+            "dense_0_size": 93,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 21.5,
+        "trial_number": 146,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 13,
+            "conv_2_size": 128,
+            "conv_3_size": 30,
+            "conv_4_size": 59,
+            "dense_0_size": 176,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.0,
+        "trial_number": 176,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 23,
+            "conv_2_size": 14,
+            "conv_3_size": 142,
+            "conv_4_size": 30,
+            "dense_0_size": 93,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.1,
+        "trial_number": 155,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 11,
+            "conv_1_size": 8,
+            "conv_2_size": 21,
+            "conv_3_size": 164,
+            "conv_4_size": 78,
+            "dense_0_size": 161,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.2,
+        "trial_number": 170,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 17,
+            "conv_2_size": 16,
+            "conv_3_size": 140,
+            "conv_4_size": 38,
+            "dense_0_size": 178,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.2,
+        "trial_number": 180,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 28,
+            "conv_2_size": 35,
+            "conv_3_size": 152,
+            "conv_4_size": 20,
+            "dense_0_size": 85,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.5,
+        "trial_number": 77,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 34,
+            "conv_2_size": 30,
+            "conv_3_size": 52,
+            "conv_4_size": 234,
+            "dense_0_size": 78,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.5,
+        "trial_number": 94,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 17,
+            "conv_2_size": 57,
+            "conv_3_size": 172,
+            "conv_4_size": 76,
+            "dense_0_size": 155,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.5,
+        "trial_number": 196,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 18,
+            "conv_2_size": 28,
+            "conv_3_size": 173,
+            "conv_4_size": 88,
+            "dense_0_size": 162,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.7,
+        "trial_number": 191,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 11,
+            "conv_2_size": 23,
+            "conv_3_size": 178,
+            "conv_4_size": 95,
+            "dense_0_size": 69,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.8,
+        "trial_number": 163,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 11,
+            "conv_1_size": 24,
+            "conv_2_size": 25,
+            "conv_3_size": 47,
+            "conv_4_size": 71,
+            "dense_0_size": 77,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 22.9,
+        "trial_number": 183,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 20,
+            "conv_2_size": 16,
+            "conv_3_size": 168,
+            "conv_4_size": 53,
+            "dense_0_size": 180,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.2,
+        "trial_number": 171,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 19,
+            "conv_2_size": 23,
+            "conv_3_size": 149,
+            "conv_4_size": 40,
+            "dense_0_size": 107,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.4,
+        "trial_number": 38,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 6,
+            "conv_1_size": 14,
+            "conv_2_size": 117,
+            "conv_3_size": 50,
+            "conv_4_size": 50,
+            "dense_0_size": 60,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.6,
+        "trial_number": 174,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 15,
+            "conv_1_size": 13,
+            "conv_2_size": 10,
+            "conv_3_size": 132,
+            "conv_4_size": 44,
+            "dense_0_size": 61,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.6,
+        "trial_number": 195,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 15,
+            "conv_1_size": 8,
+            "conv_2_size": 12,
+            "conv_3_size": 165,
+            "conv_4_size": 102,
+            "dense_0_size": 82,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.8,
+        "trial_number": 113,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 28,
+            "conv_2_size": 31,
+            "conv_3_size": 172,
+            "conv_4_size": 10,
+            "dense_0_size": 146,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.8,
+        "trial_number": 181,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 11,
+            "conv_1_size": 16,
+            "conv_2_size": 20,
+            "conv_3_size": 161,
+            "conv_4_size": 41,
+            "dense_0_size": 174,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.8,
+        "trial_number": 182,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 10,
+            "conv_2_size": 27,
+            "conv_3_size": 157,
+            "conv_4_size": 59,
+            "dense_0_size": 47,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 23.9,
+        "trial_number": 128,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 18,
+            "conv_2_size": 81,
+            "conv_3_size": 122,
+            "conv_4_size": 98,
+            "dense_0_size": 205,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.2,
+        "trial_number": 59,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 12,
+            "conv_1_size": 26,
+            "conv_2_size": 27,
+            "conv_3_size": 49,
+            "conv_4_size": 80,
+            "dense_0_size": 73,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.2,
+        "trial_number": 81,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 16,
+            "conv_1_size": 10,
+            "conv_2_size": 23,
+            "conv_3_size": 65,
+            "conv_4_size": 90,
+            "dense_0_size": 51,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.2,
+        "trial_number": 91,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 10,
+            "conv_2_size": 53,
+            "conv_3_size": 147,
+            "conv_4_size": 73,
+            "dense_0_size": 124,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.2,
+        "trial_number": 106,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 5,
+            "conv_1_size": 33,
+            "conv_2_size": 20,
+            "conv_3_size": 198,
+            "conv_4_size": 18,
+            "dense_0_size": 168,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.2,
+        "trial_number": 141,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 25,
+            "conv_2_size": 25,
+            "conv_3_size": 49,
+            "conv_4_size": 76,
+            "dense_0_size": 182,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.3,
+        "trial_number": 65,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 27,
+            "conv_2_size": 38,
+            "conv_3_size": 62,
+            "conv_4_size": 84,
+            "dense_0_size": 56,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.4,
+        "trial_number": 90,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 10,
+            "conv_2_size": 57,
+            "conv_3_size": 144,
+            "conv_4_size": 72,
+            "dense_0_size": 116,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.7,
+        "trial_number": 73,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 25,
+            "conv_2_size": 35,
+            "conv_3_size": 55,
+            "conv_4_size": 67,
+            "dense_0_size": 51,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 24.7,
+        "trial_number": 131,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 16,
+            "conv_2_size": 80,
+            "conv_3_size": 186,
+            "conv_4_size": 95,
+            "dense_0_size": 212,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.5,
+        "trial_number": 156,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 17,
+            "conv_1_size": 10,
+            "conv_2_size": 9,
+            "conv_3_size": 164,
+            "conv_4_size": 78,
+            "dense_0_size": 183,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.6,
+        "trial_number": 114,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 20,
+            "conv_2_size": 25,
+            "conv_3_size": 213,
+            "conv_4_size": 23,
+            "dense_0_size": 183,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.8,
+        "trial_number": 92,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 9,
+            "conv_2_size": 53,
+            "conv_3_size": 144,
+            "conv_4_size": 91,
+            "dense_0_size": 125,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.8,
+        "trial_number": 134,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 13,
+            "conv_2_size": 120,
+            "conv_3_size": 43,
+            "conv_4_size": 98,
+            "dense_0_size": 166,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.8,
+        "trial_number": 139,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 2,
+            "conv_0_size": 8,
+            "conv_1_size": 22,
+            "conv_2_size": 43,
+            "conv_3_size": 160,
+            "conv_4_size": 54,
+            "dense_0_size": 228,
+            "dense_1_size": 128,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.8,
+        "trial_number": 144,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 17,
+            "conv_1_size": 16,
+            "conv_2_size": 17,
+            "conv_3_size": 124,
+            "conv_4_size": 47,
+            "dense_0_size": 64,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 25.9,
+        "trial_number": 186,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 25,
+            "conv_2_size": 29,
+            "conv_3_size": 161,
+            "conv_4_size": 64,
+            "dense_0_size": 115,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 26.2,
+        "trial_number": 129,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 25,
+            "conv_2_size": 37,
+            "conv_3_size": 193,
+            "conv_4_size": 27,
+            "dense_0_size": 175,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 26.4,
+        "trial_number": 184,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 17,
+            "conv_1_size": 14,
+            "conv_2_size": 22,
+            "conv_3_size": 149,
+            "conv_4_size": 45,
+            "dense_0_size": 191,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 26.6,
+        "trial_number": 140,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 21,
+            "conv_1_size": 8,
+            "conv_2_size": 28,
+            "conv_3_size": 102,
+            "conv_4_size": 84,
+            "dense_0_size": 157,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.1,
+        "trial_number": 40,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 34,
+            "conv_2_size": 93,
+            "conv_3_size": 40,
+            "conv_4_size": 96,
+            "dense_0_size": 24,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.2,
+        "trial_number": 147,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 12,
+            "conv_1_size": 12,
+            "conv_2_size": 130,
+            "conv_3_size": 29,
+            "conv_4_size": 59,
+            "dense_0_size": 178,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.2,
+        "trial_number": 168,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 20,
+            "conv_1_size": 12,
+            "conv_2_size": 13,
+            "conv_3_size": 156,
+            "conv_4_size": 32,
+            "dense_0_size": 91,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.3,
+        "trial_number": 43,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 18,
+            "conv_1_size": 15,
+            "conv_2_size": 15,
+            "conv_3_size": 94,
+            "conv_4_size": 107,
+            "dense_0_size": 51,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.4,
+        "trial_number": 62,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 16,
+            "conv_1_size": 28,
+            "conv_2_size": 36,
+            "conv_3_size": 24,
+            "conv_4_size": 118,
+            "dense_0_size": 68,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.5,
+        "trial_number": 122,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 14,
+            "conv_1_size": 27,
+            "conv_2_size": 23,
+            "conv_3_size": 165,
+            "conv_4_size": 22,
+            "dense_0_size": 154,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.6,
+        "trial_number": 89,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 21,
+            "conv_1_size": 19,
+            "conv_2_size": 12,
+            "conv_3_size": 34,
+            "conv_4_size": 64,
+            "dense_0_size": 84,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 27.6,
+        "trial_number": 164,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 15,
+            "conv_1_size": 29,
+            "conv_2_size": 18,
+            "conv_3_size": 176,
+            "conv_4_size": 53,
+            "dense_0_size": 81,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.0,
+        "trial_number": 42,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 22,
+            "conv_1_size": 4,
+            "conv_2_size": 57,
+            "conv_3_size": 95,
+            "conv_4_size": 103,
+            "dense_0_size": 25,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.0,
+        "trial_number": 126,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 17,
+            "conv_1_size": 13,
+            "conv_2_size": 29,
+            "conv_3_size": 174,
+            "conv_4_size": 134,
+            "dense_0_size": 184,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.0,
+        "trial_number": 175,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 24,
+            "conv_1_size": 8,
+            "conv_2_size": 25,
+            "conv_3_size": 166,
+            "conv_4_size": 48,
+            "dense_0_size": 168,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.4,
+        "trial_number": 132,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 21,
+            "conv_2_size": 63,
+            "conv_3_size": 150,
+            "conv_4_size": 110,
+            "dense_0_size": 206,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.5,
+        "trial_number": 52,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 17,
+            "conv_1_size": 13,
+            "conv_2_size": 90,
+            "conv_3_size": 41,
+            "conv_4_size": 118,
+            "dense_0_size": 66,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.7,
+        "trial_number": 105,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 21,
+            "conv_1_size": 19,
+            "conv_2_size": 11,
+            "conv_3_size": 190,
+            "conv_4_size": 43,
+            "dense_0_size": 188,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.7,
+        "trial_number": 124,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 44,
+            "conv_2_size": 16,
+            "conv_3_size": 152,
+            "conv_4_size": 13,
+            "dense_0_size": 146,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 28.8,
+        "trial_number": 152,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 13,
+            "conv_2_size": 150,
+            "conv_3_size": 183,
+            "conv_4_size": 63,
+            "dense_0_size": 177,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 29.3,
+        "trial_number": 115,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 23,
+            "conv_1_size": 12,
+            "conv_2_size": 16,
+            "conv_3_size": 163,
+            "conv_4_size": 39,
+            "dense_0_size": 195,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 29.5,
+        "trial_number": 51,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 17,
+            "conv_1_size": 15,
+            "conv_2_size": 85,
+            "conv_3_size": 45,
+            "conv_4_size": 118,
+            "dense_0_size": 37,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 30.1,
+        "trial_number": 127,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 13,
+            "conv_1_size": 31,
+            "conv_2_size": 48,
+            "conv_3_size": 201,
+            "conv_4_size": 34,
+            "dense_0_size": 130,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 30.1,
+        "trial_number": 142,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 33,
+            "conv_2_size": 33,
+            "conv_3_size": 157,
+            "conv_4_size": 256,
+            "dense_0_size": 164,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 30.6,
+        "trial_number": 185,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 4,
+            "conv_2_size": 12,
+            "conv_3_size": 144,
+            "conv_4_size": 34,
+            "dense_0_size": 99,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 31.5,
+        "trial_number": 119,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 21,
+            "conv_1_size": 15,
+            "conv_2_size": 42,
+            "conv_3_size": 155,
+            "dense_0_size": 136,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 31.7,
+        "trial_number": 111,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 15,
+            "conv_2_size": 152,
+            "conv_3_size": 199,
+            "conv_4_size": 56,
+            "dense_0_size": 174,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 32.1,
+        "trial_number": 74,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 5,
+            "conv_1_size": 42,
+            "conv_2_size": 123,
+            "conv_3_size": 60,
+            "conv_4_size": 72,
+            "dense_0_size": 53,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 32.1,
+        "trial_number": 151,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 19,
+            "conv_2_size": 111,
+            "conv_3_size": 170,
+            "conv_4_size": 88,
+            "dense_0_size": 170,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 32.8,
+        "trial_number": 177,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 24,
+            "conv_2_size": 185,
+            "conv_3_size": 145,
+            "conv_4_size": 27,
+            "dense_0_size": 94,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 33.1,
+        "trial_number": 110,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 3,
+            "conv_0_size": 15,
+            "conv_1_size": 35,
+            "conv_2_size": 20,
+            "conv_3_size": 179,
+            "conv_4_size": 31,
+            "dense_0_size": 196,
+            "dense_1_size": 93,
+            "dense_2_size": 173,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 33.5,
+        "trial_number": 36,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 24,
+            "conv_1_size": 17,
+            "conv_2_size": 114,
+            "dense_0_size": 38,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 33.8,
+        "trial_number": 79,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 36,
+            "conv_2_size": 45,
+            "conv_3_size": 220,
+            "conv_4_size": 223,
+            "dense_0_size": 99,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 33.9,
+        "trial_number": 45,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 19,
+            "conv_1_size": 33,
+            "conv_2_size": 24,
+            "conv_3_size": 95,
+            "conv_4_size": 105,
+            "dense_0_size": 57,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 33.9,
+        "trial_number": 103,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 18,
+            "conv_2_size": 4,
+            "conv_3_size": 170,
+            "conv_4_size": 22,
+            "dense_0_size": 180,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 33.9,
+        "trial_number": 193,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 96,
+            "conv_2_size": 25,
+            "conv_3_size": 172,
+            "conv_4_size": 24,
+            "dense_0_size": 65,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 34.0,
+        "trial_number": 162,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 20,
+            "conv_2_size": 21,
+            "conv_3_size": 42,
+            "conv_4_size": 59,
+            "dense_0_size": 72,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 34.1,
+        "trial_number": 158,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 32,
+            "conv_1_size": 15,
+            "conv_2_size": 13,
+            "conv_3_size": 19,
+            "conv_4_size": 71,
+            "dense_0_size": 173,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 35.2,
+        "trial_number": 107,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 18,
+            "conv_1_size": 42,
+            "conv_2_size": 11,
+            "conv_3_size": 167,
+            "conv_4_size": 41,
+            "dense_0_size": 173,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 35.6,
+        "trial_number": 93,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 25,
+            "conv_1_size": 9,
+            "conv_2_size": 74,
+            "conv_3_size": 161,
+            "conv_4_size": 54,
+            "dense_0_size": 112,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 35.9,
+        "trial_number": 148,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 18,
+            "conv_1_size": 24,
+            "conv_2_size": 139,
+            "conv_3_size": 41,
+            "conv_4_size": 66,
+            "dense_0_size": 189,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 36.0,
+        "trial_number": 35,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 23,
+            "conv_1_size": 20,
+            "conv_2_size": 158,
+            "dense_0_size": 30,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 36.1,
+        "trial_number": 96,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 19,
+            "conv_1_size": 31,
+            "conv_2_size": 137,
+            "dense_0_size": 166,
+            "dense_1_size": 40,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 36.3,
+        "trial_number": 190,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 7,
+            "conv_1_size": 21,
+            "conv_2_size": 32,
+            "dense_0_size": 76,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 37.0,
+        "trial_number": 84,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 29,
+            "conv_1_size": 22,
+            "conv_2_size": 50,
+            "conv_3_size": 70,
+            "conv_4_size": 86,
+            "dense_0_size": 49,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 37.2,
+        "trial_number": 11,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 11,
+            "conv_1_size": 55,
+            "conv_2_size": 145,
+            "dense_0_size": 134,
+            "dense_1_size": 151,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 37.6,
+        "trial_number": 85,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 22,
+            "conv_2_size": 39,
+            "conv_3_size": 50,
+            "conv_4_size": 4,
+            "dense_0_size": 58,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 37.8,
+        "trial_number": 125,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 28,
+            "conv_1_size": 21,
+            "conv_2_size": 21,
+            "conv_3_size": 236,
+            "conv_4_size": 177,
+            "dense_0_size": 158,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 38.4,
+        "trial_number": 49,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 31,
+            "conv_1_size": 30,
+            "conv_2_size": 28,
+            "conv_3_size": 79,
+            "conv_4_size": 64,
+            "dense_0_size": 17,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 38.5,
+        "trial_number": 157,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 12,
+            "conv_1_size": 7,
+            "conv_2_size": 20,
+            "conv_3_size": 23,
+            "conv_4_size": 49,
+            "dense_0_size": 165,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 38.7,
+        "trial_number": 32,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 25,
+            "conv_1_size": 21,
+            "conv_2_size": 161,
+            "dense_0_size": 112,
+            "dense_1_size": 121,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 39.0,
+        "trial_number": 138,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 14,
+            "conv_1_size": 18,
+            "conv_2_size": 135,
+            "conv_3_size": 168,
+            "conv_4_size": 159,
+            "dense_0_size": 199,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 39.8,
+        "trial_number": 63,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 27,
+            "conv_1_size": 37,
+            "conv_2_size": 33,
+            "conv_3_size": 16,
+            "conv_4_size": 51,
+            "dense_0_size": 73,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 40.4,
+        "trial_number": 123,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 4,
+            "conv_2_size": 35,
+            "dense_0_size": 163,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 40.5,
+        "trial_number": 135,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 19,
+            "conv_1_size": 8,
+            "conv_2_size": 247,
+            "conv_3_size": 138,
+            "conv_4_size": 42,
+            "dense_0_size": 240,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 41.8,
+        "trial_number": 44,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 42,
+            "conv_1_size": 7,
+            "conv_2_size": 9,
+            "conv_3_size": 96,
+            "conv_4_size": 98,
+            "dense_0_size": 81,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 42.3,
+        "trial_number": 80,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 3,
+            "conv_0_size": 23,
+            "conv_1_size": 63,
+            "conv_2_size": 31,
+            "conv_3_size": 54,
+            "conv_4_size": 244,
+            "dense_0_size": 74,
+            "dense_1_size": 134,
+            "dense_2_size": 29,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 43.0,
+        "trial_number": 75,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 29,
+            "conv_1_size": 22,
+            "conv_2_size": 150,
+            "conv_3_size": 47,
+            "conv_4_size": 61,
+            "dense_0_size": 32,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 43.2,
+        "trial_number": 86,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 18,
+            "conv_1_size": 31,
+            "conv_2_size": 192,
+            "conv_3_size": 84,
+            "conv_4_size": 36,
+            "dense_0_size": 66,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 43.4,
+        "trial_number": 169,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 15,
+            "conv_1_size": 4,
+            "conv_2_size": 9,
+            "conv_3_size": 162,
+            "conv_4_size": 27,
+            "dense_0_size": 70,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 43.6,
+        "trial_number": 61,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 12,
+            "conv_1_size": 13,
+            "conv_2_size": 16,
+            "conv_3_size": 51,
+            "conv_4_size": 90,
+            "dense_0_size": 32,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 43.8,
+        "trial_number": 109,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 4,
+            "conv_2_size": 27,
+            "dense_0_size": 151,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 44.7,
+        "trial_number": 95,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 33,
+            "conv_1_size": 17,
+            "conv_2_size": 43,
+            "conv_3_size": 181,
+            "conv_4_size": 82,
+            "dense_0_size": 140,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 45.6,
+        "trial_number": 145,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 4,
+            "conv_2_size": 7,
+            "conv_3_size": 37,
+            "conv_4_size": 37,
+            "dense_0_size": 171,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 45.7,
+        "trial_number": 39,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 35,
+            "conv_1_size": 14,
+            "conv_2_size": 112,
+            "conv_3_size": 66,
+            "conv_4_size": 46,
+            "dense_0_size": 56,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 47.3,
+        "trial_number": 121,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 8,
+            "conv_1_size": 30,
+            "conv_2_size": 29,
+            "conv_3_size": 172,
+            "conv_4_size": 6,
+            "dense_0_size": 144,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 47.4,
+        "trial_number": 66,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 11,
+            "conv_1_size": 117,
+            "conv_2_size": 38,
+            "conv_3_size": 59,
+            "conv_4_size": 78,
+            "dense_0_size": 78,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 48.2,
+        "trial_number": 83,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 14,
+            "conv_1_size": 10,
+            "conv_2_size": 23,
+            "conv_3_size": 65,
+            "conv_4_size": 191,
+            "dense_0_size": 40,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 49.7,
+        "trial_number": 149,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 26,
+            "conv_1_size": 53,
+            "conv_2_size": 124,
+            "conv_3_size": 54,
+            "conv_4_size": 52,
+            "dense_0_size": 162,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 50.4,
+        "trial_number": 5,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 5,
+            "conv_0_size": 7,
+            "conv_1_size": 104,
+            "conv_2_size": 177,
+            "dense_0_size": 249,
+            "dense_1_size": 166,
+            "dense_2_size": 235,
+            "dense_3_size": 30,
+            "dense_4_size": 96,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 50.6,
+        "trial_number": 150,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 114,
+            "conv_2_size": 145,
+            "conv_3_size": 30,
+            "conv_4_size": 44,
+            "dense_0_size": 152,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 53.1,
+        "trial_number": 188,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 21,
+            "conv_1_size": 17,
+            "conv_2_size": 8,
+            "conv_3_size": 33,
+            "conv_4_size": 39,
+            "dense_0_size": 174,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 53.5,
+        "trial_number": 60,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 2,
+            "conv_0_size": 50,
+            "conv_1_size": 23,
+            "conv_2_size": 27,
+            "conv_3_size": 97,
+            "conv_4_size": 75,
+            "dense_0_size": 43,
+            "dense_1_size": 92,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 53.7,
+        "trial_number": 130,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 24,
+            "conv_1_size": 8,
+            "conv_2_size": 14,
+            "conv_3_size": 210,
+            "conv_4_size": 13,
+            "dense_0_size": 170,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 54.5,
+        "trial_number": 41,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 33,
+            "conv_2_size": 98,
+            "conv_3_size": 42,
+            "conv_4_size": 100,
+            "dense_0_size": 25,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 58.9,
+        "trial_number": 179,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 22,
+            "conv_2_size": 5,
+            "conv_3_size": 37,
+            "conv_4_size": 37,
+            "dense_0_size": 104,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 60.9,
+        "trial_number": 53,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 14,
+            "conv_1_size": 4,
+            "conv_2_size": 7,
+            "conv_3_size": 23,
+            "conv_4_size": 82,
+            "dense_0_size": 67,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 61.2,
+        "trial_number": 137,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 164,
+            "conv_2_size": 87,
+            "conv_3_size": 116,
+            "conv_4_size": 202,
+            "dense_0_size": 141,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 61.5,
+        "trial_number": 88,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 48,
+            "conv_1_size": 41,
+            "conv_2_size": 31,
+            "conv_3_size": 83,
+            "conv_4_size": 92,
+            "dense_0_size": 45,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 62.2,
+        "trial_number": 46,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 5,
+            "conv_2_size": 52,
+            "conv_3_size": 36,
+            "conv_4_size": 63,
+            "dense_0_size": 11,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 65.1,
+        "trial_number": 67,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 2,
+            "conv_0_size": 34,
+            "conv_1_size": 59,
+            "conv_2_size": 71,
+            "conv_3_size": 253,
+            "conv_4_size": 123,
+            "dense_0_size": 88,
+            "dense_1_size": 45,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 66.1,
+        "trial_number": 192,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 70,
+            "conv_1_size": 8,
+            "conv_2_size": 16,
+            "conv_3_size": 166,
+            "conv_4_size": 92,
+            "dense_0_size": 56,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 68.5,
+        "trial_number": 31,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 62,
+            "conv_1_size": 25,
+            "conv_2_size": 142,
+            "dense_0_size": 107,
+            "dense_1_size": 115,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 69.0,
+        "trial_number": 64,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 42,
+            "conv_1_size": 73,
+            "conv_2_size": 18,
+            "conv_3_size": 27,
+            "dense_0_size": 46,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 69.6,
+        "trial_number": 76,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 170,
+            "conv_2_size": 104,
+            "conv_3_size": 75,
+            "dense_0_size": 61,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 69.9,
+        "trial_number": 118,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 9,
+            "conv_1_size": 207,
+            "conv_2_size": 32,
+            "conv_3_size": 175,
+            "conv_4_size": 48,
+            "dense_0_size": 217,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 71.6,
+        "trial_number": 8,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 3,
+            "conv_0_size": 46,
+            "conv_1_size": 64,
+            "conv_2_size": 181,
+            "dense_0_size": 148,
+            "dense_1_size": 190,
+            "dense_2_size": 94,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 72.7,
+        "trial_number": 70,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 58,
+            "conv_1_size": 47,
+            "conv_2_size": 47,
+            "conv_3_size": 16,
+            "conv_4_size": 28,
+            "dense_0_size": 42,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 72.7,
+        "trial_number": 120,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 38,
+            "conv_1_size": 38,
+            "conv_2_size": 220,
+            "conv_3_size": 184,
+            "conv_4_size": 111,
+            "dense_0_size": 177,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 73.3,
+        "trial_number": 15,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 70,
+            "conv_1_size": 26,
+            "conv_2_size": 145,
+            "dense_0_size": 109,
+            "dense_1_size": 108,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 73.5,
+        "trial_number": 22,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 3,
+            "conv_0_size": 46,
+            "conv_1_size": 62,
+            "conv_2_size": 159,
+            "dense_0_size": 180,
+            "dense_1_size": 170,
+            "dense_2_size": 108,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 74.6,
+        "trial_number": 28,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 50,
+            "conv_1_size": 37,
+            "conv_2_size": 225,
+            "dense_0_size": 81,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 78.4,
+        "trial_number": 55,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 4,
+            "conv_1_size": 28,
+            "conv_2_size": 101,
+            "conv_3_size": 153,
+            "dense_0_size": 19,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 79.1,
+        "trial_number": 21,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 37,
+            "conv_1_size": 70,
+            "conv_2_size": 180,
+            "dense_0_size": 145,
+            "dense_1_size": 206,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 80.5,
+        "trial_number": 47,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 62,
+            "conv_1_size": 49,
+            "conv_2_size": 78,
+            "conv_3_size": 93,
+            "conv_4_size": 144,
+            "dense_0_size": 70,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 83.2,
+        "trial_number": 187,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 14,
+            "conv_1_size": 82,
+            "conv_2_size": 17,
+            "conv_3_size": 133,
+            "conv_4_size": 49,
+            "dense_0_size": 167,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 83.4,
+        "trial_number": 13,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 2,
+            "conv_0_size": 9,
+            "conv_1_size": 244,
+            "conv_2_size": 122,
+            "conv_3_size": 6,
+            "dense_0_size": 248,
+            "dense_1_size": 139,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 85.9,
+        "trial_number": 48,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 14,
+            "conv_1_size": 237,
+            "conv_2_size": 46,
+            "conv_3_size": 33,
+            "conv_4_size": 144,
+            "dense_0_size": 49,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 90.9,
+        "trial_number": 159,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 4,
+            "conv_0_size": 21,
+            "conv_1_size": 4,
+            "conv_2_size": 163,
+            "conv_3_size": 11,
+            "conv_4_size": 81,
+            "dense_0_size": 159,
+            "dense_1_size": 76,
+            "dense_2_size": 254,
+            "dense_3_size": 255,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 100.1,
+        "trial_number": 133,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 87,
+            "conv_1_size": 36,
+            "conv_2_size": 68,
+            "conv_3_size": 178,
+            "conv_4_size": 68,
+            "dense_0_size": 192,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 102.7,
+        "trial_number": 18,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 36,
+            "conv_1_size": 152,
+            "conv_2_size": 75,
+            "dense_0_size": 223,
+            "dense_1_size": 102,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 104.0,
+        "trial_number": 136,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 106,
+            "conv_1_size": 29,
+            "conv_2_size": 105,
+            "dense_0_size": 149,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 105.9,
+        "trial_number": 25,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 2,
+            "conv_0_size": 80,
+            "conv_1_size": 54,
+            "conv_2_size": 203,
+            "dense_0_size": 200,
+            "dense_1_size": 148,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 108.6,
+        "trial_number": 29,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 5,
+            "conv_0_size": 54,
+            "conv_1_size": 105,
+            "conv_2_size": 135,
+            "conv_3_size": 67,
+            "conv_4_size": 15,
+            "dense_0_size": 36,
+            "dense_1_size": 181,
+            "dense_2_size": 90,
+            "dense_3_size": 153,
+            "dense_4_size": 143,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 118.2,
+        "trial_number": 12,
+        "params": {
+            "num_conv_layers": 2,
+            "num_dense_layers": 2,
+            "conv_0_size": 22,
+            "conv_1_size": 39,
+            "dense_0_size": 95,
+            "dense_1_size": 142,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 121.7,
+        "trial_number": 0,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 5,
+            "conv_0_size": 56,
+            "conv_1_size": 123,
+            "conv_2_size": 192,
+            "conv_3_size": 244,
+            "conv_4_size": 220,
+            "dense_0_size": 206,
+            "dense_1_size": 204,
+            "dense_2_size": 179,
+            "dense_3_size": 78,
+            "dense_4_size": 250,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 131.2,
+        "trial_number": 194,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 151,
+            "conv_1_size": 14,
+            "conv_2_size": 20,
+            "conv_3_size": 157,
+            "conv_4_size": 84,
+            "dense_0_size": 41,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 135.1,
+        "trial_number": 6,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 4,
+            "conv_0_size": 61,
+            "conv_1_size": 189,
+            "conv_2_size": 39,
+            "conv_3_size": 189,
+            "dense_0_size": 123,
+            "dense_1_size": 71,
+            "dense_2_size": 238,
+            "dense_3_size": 46,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 157.1,
+        "trial_number": 30,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 4,
+            "conv_0_size": 75,
+            "conv_1_size": 143,
+            "conv_2_size": 97,
+            "conv_3_size": 179,
+            "dense_0_size": 206,
+            "dense_1_size": 158,
+            "dense_2_size": 156,
+            "dense_3_size": 66,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 160.0,
+        "trial_number": 26,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 5,
+            "conv_0_size": 119,
+            "conv_1_size": 81,
+            "conv_2_size": 175,
+            "conv_3_size": 128,
+            "dense_0_size": 123,
+            "dense_1_size": 119,
+            "dense_2_size": 43,
+            "dense_3_size": 86,
+            "dense_4_size": 88,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 176.0,
+        "trial_number": 178,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 18,
+            "conv_1_size": 255,
+            "conv_2_size": 13,
+            "conv_3_size": 139,
+            "conv_4_size": 30,
+            "dense_0_size": 94,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 183.4,
+        "trial_number": 68,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 141,
+            "conv_1_size": 93,
+            "conv_2_size": 5,
+            "conv_3_size": 68,
+            "dense_0_size": 59,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 183.7,
+        "trial_number": 4,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 99,
+            "conv_1_size": 192,
+            "conv_2_size": 93,
+            "conv_3_size": 58,
+            "conv_4_size": 187,
+            "dense_0_size": 244,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 189.7,
+        "trial_number": 58,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 2,
+            "conv_0_size": 173,
+            "conv_1_size": 57,
+            "conv_2_size": 41,
+            "conv_3_size": 76,
+            "dense_0_size": 62,
+            "dense_1_size": 61,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 192.2,
+        "trial_number": 50,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 95,
+            "conv_1_size": 216,
+            "conv_2_size": 62,
+            "conv_3_size": 112,
+            "dense_0_size": 85,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 193.3,
+        "trial_number": 108,
+        "params": {
+            "num_conv_layers": 2,
+            "num_dense_layers": 1,
+            "conv_0_size": 27,
+            "conv_1_size": 16,
+            "dense_0_size": 187,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 196.0,
+        "trial_number": 87,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 120,
+            "conv_1_size": 10,
+            "conv_2_size": 20,
+            "conv_3_size": 60,
+            "dense_0_size": 54,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 200.5,
+        "trial_number": 56,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 2,
+            "conv_0_size": 243,
+            "conv_1_size": 14,
+            "conv_2_size": 84,
+            "conv_3_size": 79,
+            "conv_4_size": 164,
+            "dense_0_size": 91,
+            "dense_1_size": 54,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 205.6,
+        "trial_number": 37,
+        "params": {
+            "num_conv_layers": 4,
+            "num_dense_layers": 1,
+            "conv_0_size": 96,
+            "conv_1_size": 42,
+            "conv_2_size": 67,
+            "conv_3_size": 4,
+            "dense_0_size": 25,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 218.5,
+        "trial_number": 23,
+        "params": {
+            "num_conv_layers": 2,
+            "num_dense_layers": 3,
+            "conv_0_size": 33,
+            "conv_1_size": 17,
+            "dense_0_size": 101,
+            "dense_1_size": 187,
+            "dense_2_size": 69,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 240.1,
+        "trial_number": 167,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 10,
+            "conv_1_size": 9,
+            "conv_2_size": 4,
+            "dense_0_size": 88,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 249.3,
+        "trial_number": 19,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 1,
+            "conv_0_size": 195,
+            "conv_1_size": 104,
+            "conv_2_size": 231,
+            "dense_0_size": 134,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 265.6,
+        "trial_number": 27,
+        "params": {
+            "num_conv_layers": 2,
+            "num_dense_layers": 3,
+            "conv_0_size": 27,
+            "conv_1_size": 149,
+            "dense_0_size": 229,
+            "dense_1_size": 220,
+            "dense_2_size": 206,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 274.0,
+        "trial_number": 3,
+        "params": {
+            "num_conv_layers": 3,
+            "num_dense_layers": 3,
+            "conv_0_size": 99,
+            "conv_1_size": 95,
+            "conv_2_size": 210,
+            "dense_0_size": 153,
+            "dense_1_size": 36,
+            "dense_2_size": 14,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 360.1,
+        "trial_number": 112,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 1,
+            "conv_0_size": 217,
+            "conv_1_size": 23,
+            "conv_2_size": 12,
+            "conv_3_size": 158,
+            "conv_4_size": 46,
+            "dense_0_size": 154,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    },
+    {
+        "training_time": 475.5,
+        "trial_number": 98,
+        "params": {
+            "num_conv_layers": 5,
+            "num_dense_layers": 3,
+            "conv_0_size": 187,
+            "conv_1_size": 4,
+            "conv_2_size": 169,
+            "conv_3_size": 190,
+            "conv_4_size": 103,
+            "dense_0_size": 158,
+            "dense_1_size": 65,
+            "dense_2_size": 213,
+            "flatten_type": "global_average",
+            "activation": "relu",
+            "optimizer": "adam"
+        }
+    }
+]
