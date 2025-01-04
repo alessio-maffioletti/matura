@@ -202,16 +202,20 @@ class Dataset2:
         dataset = tf.data.TFRecordDataset(filename).map(lambda example_proto: self._parse_image_function(example_proto))
         return dataset
     
-    def crop_images(self, X_train_canvas, batch, model):
-        X_cropped = []
-        crop_amount = 32
-        base_grace = 5
-
+    def crop_images(self, X_train_canvas, batch, model, mae):
         small_data = X_train_canvas #[:100]
 
-        for i in range(small_data.shape[0]):
-            grace = base_grace
+        X_cropped = []
+        crop_amount = 32
+        grace = int(round(mae, 0))
+        change_cropped_image_shape([crop_amount+2*grace,crop_amount+2*grace,1])
+        #print(CROPPED_IMAGE)
+        #CROPPED_IMAGE = {
+        #    'image_shape': [crop_amount+2*grace,crop_amount+2*grace,1],
+        #    'input_shape': tuple([crop_amount+2*grace,crop_amount+2*grace,1])
+        #}
 
+        for i in range(small_data.shape[0]):
             image = small_data[i]
             coords = model.predict(image.reshape(1,128,128,1))
             x = int(coords[0][0])
@@ -225,9 +229,9 @@ class Dataset2:
             if y < grace:
                 y = grace
             
-            cropped_image = image[y-grace:y+crop_amount+grace, x-grace:x+crop_amount+grace]
+            cropped_image = image[int(y-grace):int(y+crop_amount+grace), int(x-grace):int(x+crop_amount+grace)]
 
-            if cropped_image.shape != (42,42,1):
+            if cropped_image.shape != (crop_amount+2*grace,crop_amount+2*grace,1):
                 print(f"Error: {cropped_image.shape}")
                 print(x,y)
                 plt.imshow(cropped_image)
@@ -235,10 +239,10 @@ class Dataset2:
                 plt.imshow(image)
                 plt.show()
             X_cropped.append(cropped_image)
-            print(f"\rNum: {i+1} / {small_data.shape[0]} Batch: {batch} ", end='')
+            print(f"Num: {i+1} / {small_data.shape[0]} Batch: {batch} \r", end='')
 
         X_cropped = np.array(X_cropped)
-        print(X_cropped.shape)
+        #print(X_cropped.shape)
         return X_cropped
     
     def _bytes_feature(sefl, value):
@@ -255,17 +259,40 @@ class Dataset2:
         #print(f'feature: {feature["label"]}')
         return tf.train.Example(features=tf.train.Features(feature=feature))
     
-    def write_tfrecord(self, data, model, filename):
+    def write_tfrecord(self, data, model, mae, filename):
         """Write data to a TFRecord file."""
         with tf.io.TFRecordWriter(filename) as writer:
             for n, batch in enumerate(data):
                 (images, _), labels = batch
-                images = self.crop_images(images.numpy(), n, model)
+                images = self.crop_images(images.numpy(), n, model, mae)
                 serialized_image = tf.io.serialize_tensor(tf.convert_to_tensor(images)).numpy()
                 serialized_label = tf.io.serialize_tensor(tf.convert_to_tensor(labels)).numpy()
 
                 tf_example = self.example_test(serialized_image, serialized_label)
                 writer.write(tf_example.SerializeToString())
+
+    def get_mae(self, model):
+        from model_manager import section1
+        model = section1()
+        model.initialise_data_and_model(train_params=self.trainable_params, weights=self.weights)
+
+        history = model.model.evaluate(model.val_dataset)
+
+
+        y_labels = []
+        for batch in model.val_dataset.take(-1):
+            _, coords_batch = batch
+            coords_batch = coords_batch.numpy()
+            y_labels.append(coords_batch)
+
+        y_labels = np.array(y_labels)
+        y_labels = y_labels.reshape(-1, y_labels.shape[2])
+
+        mae_metric = tf.keras.losses.MeanAbsoluteError()
+        mae_value = mae_metric(y_labels, history).numpy()
+
+
+        return mae_value
 
     def generate_dataset(self):
         train_dataset = self.read_tfrecord(filename=TRAIN_SINGLE_PATH)
@@ -275,8 +302,11 @@ class Dataset2:
         model.compile()
         model.load_weights(self.weights)
 
-        self.write_tfrecord(train_dataset, model, filename=TRAIN_CROPPED_PATH)
-        self.write_tfrecord(val_dataset, model, filename=TEST_CROPPED_PATH)
+        #get model mean_absolute_error
+        mae = self.get_mae(model)
+
+        self.write_tfrecord(train_dataset, model, mae, filename=TRAIN_CROPPED_PATH)
+        self.write_tfrecord(val_dataset, model, mae, filename=TEST_CROPPED_PATH)
 
 
 

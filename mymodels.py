@@ -200,7 +200,7 @@ class ClassificationModel:
         trainable_params = print_trainable_params(self.model)
         return trainable_params
     
-    def train(self, train_dataset, val_dataset, metric, params, checkpoints_folder):
+    def train(self, train_dataset, val_dataset, metric, params, checkpoints_folder=None):
         # Default parameters
         default_params = {
             'epochs': 10,
@@ -290,8 +290,8 @@ class ClassificationModel:
     def load_weights(self, path):
         self.model.load_weights(path)
     
-    def evaluate(self, dataset, weight_path):
-        if os.path.exists(weight_path):
+    def evaluate(self, dataset, weight_path=None):
+        if weight_path is not None and os.path.exists(weight_path):
             self.model.load_weights(weight_path)
 
         predictions = self.model.predict(dataset, verbose=1)

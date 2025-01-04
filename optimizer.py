@@ -243,11 +243,11 @@ class BayesianOptimizer:
             params = {'epochs': initial_params['epochs'],
                     'stop_at': target,
                     'max_time': self.best_time + MAX_TRAIN_TIME,
-                    'show_progress': False,
+                    'show_progress': True,
                     'save_final': True,
                     'weight_string': f'_optimize_{trial.number}'
                     }
-            reached_target, training_time, best_val_loss = model.train(params)
+            reached_target, training_time, best_val_loss, history = model.train(params)
 
             if not reached_target:
                 if penalty_blob == 'multiply':
@@ -259,7 +259,7 @@ class BayesianOptimizer:
             else:
                 penalty = training_time
             
-            #model.plot()
+            model.plot()
 
             self.best_time = min(self.best_time, training_time)
 

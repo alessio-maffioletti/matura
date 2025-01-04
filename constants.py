@@ -26,14 +26,21 @@ MAX_TRAIN_TIME = 300
 RANDOM_SEED = 42
 
 IMAGE_SHAPE = [128,128,1]
-CROPPED_IMAGE_SHAPE = [42,42,1]
+CROPPED_IMAGE = {
+    'image_shape': [34,34,1],
+    'input_shape': (34,34,1)
+}
 COORDS_SHAPE = [2]
 LABELS_SHAPE = [10]
 
 INPUT_SHAPE = tuple(IMAGE_SHAPE)
-CROPPED_INPUT_SHAPE = tuple(CROPPED_IMAGE_SHAPE)
+#CROPPED_INPUT_SHAPE = tuple(CROPPED_IMAGE_SHAPE['input_shape'])
 COORDS_OUTPUT_SHAPE = int(COORDS_SHAPE[0])
 LABELS_OUTPUT_SHAPE = int(LABELS_SHAPE[0])
 
 CLASSIFICATION_ACTIVATION = 'softmax'
 REGRESSION_ACTIVATION = 'linear'
+
+def change_cropped_image_shape(image_shape):
+    CROPPED_IMAGE['image_shape'] = image_shape
+    CROPPED_IMAGE['input_shape'] = tuple(image_shape)

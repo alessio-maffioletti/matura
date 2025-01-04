@@ -92,7 +92,7 @@ class better_models:
         best_val_loss = self.run.history[list(self.run.history)[3]][-1]
 
         
-        return reached_target, round(training_time, 1), best_val_loss
+        return reached_target, round(training_time, 1), best_val_loss, self.run.history
     def _plot_random(self, image, predicted, actual):
         plt.imshow(image, cmap='gray')
         #plt.scatter(predicted[0], predicted[1], color='red', label='Predicted')
@@ -206,12 +206,15 @@ class better_models:
 
 
 class section1(better_models):
-    def initialise_data_and_model(self, train_params=None):
+    def initialise_data_and_model(self, train_params=None, weights=None):
         
         super().initialise_data_and_model(train_dataset_path=TRAIN_COORDS_PATH, val_dataset_path=TEST_COORDS_PATH, image_shape=IMAGE_SHAPE, label_shape=COORDS_SHAPE)
     
         self.model = mymodels.RegressionModel(trainable_params=train_params, input_shape=INPUT_SHAPE, output_shape=COORDS_OUTPUT_SHAPE, activation=REGRESSION_ACTIVATION)
         trainable_params = self.model.compile()
+
+        if weights is not None:
+            self.model.load_weights(weights)
         return trainable_params
         
     def train(self, params=None):
@@ -228,9 +231,9 @@ class section1(better_models):
 class section2(better_models):
     def initialise_data_and_model(self, train_params=None):
         
-        super().initialise_data_and_model(train_dataset_path=TRAIN_CROPPED_PATH, val_dataset_path=TEST_CROPPED_PATH, image_shape=CROPPED_IMAGE_SHAPE, label_shape=LABELS_SHAPE)
+        super().initialise_data_and_model(train_dataset_path=TRAIN_CROPPED_PATH, val_dataset_path=TEST_CROPPED_PATH, image_shape=CROPPED_IMAGE['image_shape'], label_shape=LABELS_SHAPE)
 
-        self.model = mymodels.ClassificationModel(input_shape=CROPPED_INPUT_SHAPE, output_shape=LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, trainable_params=train_params)
+        self.model = mymodels.ClassificationModel(input_shape=CROPPED_IMAGE['input_shape'], output_shape=LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, trainable_params=train_params)
         trainable_params = self.model.compile(optimizer='adam',loss='categorical_crossentropy', metrics=['accuracy'] )
     
         return trainable_params
