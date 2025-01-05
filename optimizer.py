@@ -245,7 +245,8 @@ class BayesianOptimizer:
                     'max_time': self.best_time + MAX_TRAIN_TIME,
                     'show_progress': True,
                     'save_final': True,
-                    'weight_string': f'_optimize_{trial.number}'
+                    'weight_string': f'_optimize_{trial.number}',
+                    'batch_plot': False
                     }
             reached_target, training_time, best_val_loss, history = model.train(params=params)
 
@@ -259,7 +260,7 @@ class BayesianOptimizer:
             else:
                 penalty = training_time
             
-            model.plot()
+            #model.plot()
 
             self.best_time = min(self.best_time, training_time)
 

@@ -207,7 +207,7 @@ class Dataset2:
 
         X_cropped = []
         crop_amount = 32
-        grace = int(round(mae, 0))
+        grace = int(round(mae/2, 0))
         change_cropped_image_shape([crop_amount+2*grace,crop_amount+2*grace,1])
         #print(CROPPED_IMAGE)
         #CROPPED_IMAGE = {
@@ -230,6 +230,9 @@ class Dataset2:
                 y = grace
             
             cropped_image = image[int(y-grace):int(y+crop_amount+grace), int(x-grace):int(x+crop_amount+grace)]
+
+            print(cropped_image.shape)
+            print(grace)
 
             if cropped_image.shape != (crop_amount+2*grace,crop_amount+2*grace,1):
                 print(f"Error: {cropped_image.shape}")

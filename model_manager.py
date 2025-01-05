@@ -161,7 +161,7 @@ class better_models:
         history_model = self.run.history
 
         # Create a figure with 4 subplots, one for each metric
-        fig, axs = plt.subplots(4, 1, figsize=(10, 8))
+        fig, axs = plt.subplots(4, 1, figsize=(5, 8))
 
         # List of metric names to plot
         metrics = list(history_model.keys())
@@ -171,7 +171,7 @@ class better_models:
         validation_interval = 156
 
         # Plot 1: Training Accuracy
-        axs[0].plot(range(len(history_model[metrics[0]])), history_model[metrics[0]], color="blue", label="Training Accuracy")
+        axs[0].plot(range(len(history_model[metrics[0]])), history_model[metrics[0]], color="blue")
         axs[0].set_xlabel("Batch")
         axs[0].set_ylabel(metrics[0])  # Dynamically set the y-axis label
         axs[0].legend()
@@ -181,7 +181,7 @@ class better_models:
             axs[0].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
 
         # Plot 2: Validation Accuracy
-        axs[1].plot(range(len(history_model[metrics[2]])), history_model[metrics[2]], color="red", label="Validation Accuracy")
+        axs[1].plot(range(len(history_model[metrics[2]])), history_model[metrics[2]], color="red")
         axs[1].set_xlabel("Batch")
         axs[1].set_ylabel(metrics[2])  # Dynamically set the y-axis label
         axs[1].legend()
@@ -191,7 +191,7 @@ class better_models:
             axs[1].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
 
         # Plot 3: Training Loss
-        axs[2].plot(range(len(history_model[metrics[1]])), history_model[metrics[1]], color="blue", label="Training Loss")
+        axs[2].plot(range(len(history_model[metrics[1]])), history_model[metrics[1]], color="blue")
         axs[2].set_xlabel("Batch")
         axs[2].set_ylabel(metrics[1])  # Dynamically set the y-axis label
         axs[2].legend()
@@ -201,7 +201,7 @@ class better_models:
             axs[2].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
 
         # Plot 4: Validation Loss
-        axs[3].plot(range(len(history_model[metrics[3]])), history_model[metrics[3]], color="red", label="Validation Loss")
+        axs[3].plot(range(len(history_model[metrics[3]])), history_model[metrics[3]], color="red")
         axs[3].set_xlabel("Batch")
         axs[3].set_ylabel(metrics[3])  # Dynamically set the y-axis label
         axs[3].legend()
