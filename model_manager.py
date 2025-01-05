@@ -121,7 +121,7 @@ class better_models:
             break  # Only evaluate one random sample
 
         
-    def plot(self):
+    def plot_old(self):
         history_model = self.run.history
         #print("The history has the following data: ", history_model.keys())
 
@@ -156,57 +156,74 @@ class better_models:
         axs[1].set_ylabel(list(history_model)[1])
 
         plt.show()
-    
-    def plot_sb(self):
+
+    def plot(self):
         history_model = self.run.history
 
-        # Create a figure with two subplots
-        fig, axs = plt.subplots(1, 2, figsize=(12, 5))
+        # Create a figure with 4 subplots, one for each metric
+        fig, axs = plt.subplots(4, 1, figsize=(10, 8))
 
-        # Plot training and validation accuracy
-        sns.lineplot(
-            x=self.run.epoch, 
-            y=history_model[list(history_model)[0]], 
-            label="Training accuracy", 
-            color="blue", 
-            ax=axs[0]
-        )
-        sns.lineplot(
-            x=self.run.epoch,
-            y=history_model[list(history_model)[2]], 
-            label="Validation accuracy", 
-            color="red", 
-            ax=axs[0]
-        )
-        axs[0].set_xlabel("Epochs")
-        axs[0].set_ylabel("Accuracy")
+        # List of metric names to plot
+        metrics = list(history_model.keys())
+
+        # Define the interval values (937 for training, 156 for validation)
+        training_interval = 937
+        validation_interval = 156
+
+        # Plot 1: Training Accuracy
+        axs[0].plot(range(len(history_model[metrics[0]])), history_model[metrics[0]], color="blue", label="Training Accuracy")
+        axs[0].set_xlabel("Batch")
+        axs[0].set_ylabel(metrics[0])  # Dynamically set the y-axis label
         axs[0].legend()
 
-        # Plot training and validation loss
-        sns.lineplot(
-            x=self.run.epoch, 
-            y=history_model[list(history_model)[1]], 
-            label="Training loss", 
-            color="blue", 
-            ax=axs[1]
-        )
-        sns.lineplot(
-            x=self.run.epoch,
-            y=history_model[list(history_model)[3]], 
-            label="Validation loss", 
-            color="red", 
-            ax=axs[1]
-        )
-        axs[1].set_xlabel("Epochs")
-        axs[1].set_ylabel("Loss")
+        # Add vertical lines for every 937 epochs
+        for i in range(training_interval, len(history_model[metrics[0]]), training_interval):
+            axs[0].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
+
+        # Plot 2: Validation Accuracy
+        axs[1].plot(range(len(history_model[metrics[2]])), history_model[metrics[2]], color="red", label="Validation Accuracy")
+        axs[1].set_xlabel("Batch")
+        axs[1].set_ylabel(metrics[2])  # Dynamically set the y-axis label
         axs[1].legend()
 
+        # Add vertical lines for every 156 epochs
+        for i in range(validation_interval, len(history_model[metrics[2]]), validation_interval):
+            axs[1].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
+
+        # Plot 3: Training Loss
+        axs[2].plot(range(len(history_model[metrics[1]])), history_model[metrics[1]], color="blue", label="Training Loss")
+        axs[2].set_xlabel("Batch")
+        axs[2].set_ylabel(metrics[1])  # Dynamically set the y-axis label
+        axs[2].legend()
+
+        # Add vertical lines for every 937 epochs
+        for i in range(training_interval, len(history_model[metrics[1]]), training_interval):
+            axs[2].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
+
+        # Plot 4: Validation Loss
+        axs[3].plot(range(len(history_model[metrics[3]])), history_model[metrics[3]], color="red", label="Validation Loss")
+        axs[3].set_xlabel("Batch")
+        axs[3].set_ylabel(metrics[3])  # Dynamically set the y-axis label
+        axs[3].legend()
+
+        # Add vertical lines for every 156 epochs
+        for i in range(validation_interval, len(history_model[metrics[3]]), validation_interval):
+            axs[3].axvline(x=i, color='gray', linestyle='--', linewidth=1)  # Vertical line
+
+        # Adjust layout for better spacing
         plt.tight_layout()
         plt.show()
 
 
+
+
+
+
+    
+
 class section1(better_models):
     def initialise_data_and_model(self, train_params=None, weights=None):
+        print("Initialising data and model...")
         
         super().initialise_data_and_model(train_dataset_path=TRAIN_COORDS_PATH, val_dataset_path=TEST_COORDS_PATH, image_shape=IMAGE_SHAPE, label_shape=COORDS_SHAPE)
     

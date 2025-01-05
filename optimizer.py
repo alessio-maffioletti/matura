@@ -247,7 +247,7 @@ class BayesianOptimizer:
                     'save_final': True,
                     'weight_string': f'_optimize_{trial.number}'
                     }
-            reached_target, training_time, best_val_loss, history = model.train(params)
+            reached_target, training_time, best_val_loss, history = model.train(params=params)
 
             if not reached_target:
                 if penalty_blob == 'multiply':

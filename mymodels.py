@@ -82,6 +82,57 @@ class StopAtTime(Callback):
             self.model.stop_training = True
 
 
+class BatchLoggingCallback(tf.keras.callbacks.Callback):
+    def __init__(self):
+        super().__init__()
+        self.history = {}  # Dynamically initialized from logs
+        self.batch = []  # Tracks batches
+
+    def on_train_batch_end(self, batch, logs=None):
+        logs = logs or {}
+        self.batch.append(len(self.batch))  # Track batch indices globally
+
+        # Log training metrics
+        for metric, value in logs.items():
+            if metric not in self.history:
+                self.history[metric] = []
+            self.history[metric].append(value)
+
+    def on_test_batch_end(self, batch, logs=None):
+        logs = logs or {}
+
+        # Log validation metrics (prefixed with "val_" for clarity)
+        for metric, value in logs.items():
+            val_metric = f"val_{metric}"
+            if val_metric not in self.history:
+                self.history[val_metric] = []
+            self.history[val_metric].append(value)
+
+
+
+class BatchRunWrapper:
+    def __init__(self, batch_logger):
+        self.history = batch_logger.history
+        self.epoch = batch_logger.batch  # Mimic `epoch` with `batch`
+
+
+class BatchRunWrapperGG:
+    def __init__(self, epoch_run, batch_logger):
+        # Start with the batch history
+        self.history = batch_logger.history
+        self.epoch = batch_logger.batch  # Use batches for indexing
+        
+        # Add only missing validation metrics from epoch history
+        for metric, values in epoch_run.history.items():
+            if metric not in self.history:
+                self.history[metric] = values
+        
+        # Mimic epoch indexing for compatibility
+        #self.epoch = batch_logger.batch
+
+
+
+
 def print_trainable_params(model, figsize=(2, 2), threshold=5):
     total_trainable_params = 0
     layer_names = []
@@ -213,6 +264,7 @@ class ClassificationModel:
             'max_time': None,
             'show_progress': True,
             'strop': True, 
+            'batch_plot': True
             }
         
         # Merge provided params with defaults
@@ -272,6 +324,10 @@ class ClassificationModel:
         if params['max_time']:
             callbacks.append(StopAtTime(params['max_time']))
 
+        if params['batch_plot']:
+            batch_log_callback = BatchLoggingCallback()
+            callbacks.append(batch_log_callback)
+
         # Train the model
         model_run = self.model.fit(
             train_dataset,
@@ -283,6 +339,9 @@ class ClassificationModel:
 
         if params['save_final']:
             self.model.save_weights(os.path.join(checkpoints_folder, f"{self.name}{params['weight_string']}.weights.h5"))
+
+        if params['batch_plot']:
+            model_run = BatchRunWrapper(batch_log_callback)
 
         return model_run, early_stopping.reached_target if early_stopping else False
     
