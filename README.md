@@ -26,5 +26,8 @@ dataset2_folder = main_folder + 'dataset2' + '/'
 
 # In diesen Foldern werden Trainingsdaten gespeichert.
 
+# Schlussendlich kann main_script.ipynb ausgeführt
+## Achtung! die Datensatzerstellung braucht viel Arbeittspeicher, ich empfehle sicherzustellen, dass mindestens 12 GB freier Arbeitsspeicher vorhanden ist
+
 # Als Beispiel habe ich meine Folders als Bild eingefügt.
 ![alt text](Folders.png)
