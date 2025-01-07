@@ -101,12 +101,18 @@ class better_models:
         plt.title(f"Predicted: {predicted.argmax().round(1)} | Actual: {actual.argmax()}")
         plt.show()
 
-    def eval_random(self):
+    def eval_random(self, num_sample=None):
         for a in self.val_dataset:  # Iterate through the dataset
             image_batch, label_batch = a  # Get a batch of images and labels
             image_batch = image_batch.numpy()  # Convert to numpy for easier handling
             label_batch = label_batch.numpy()
-            random_sample = np.random.randint(0, image_batch.shape[0])  # Randomly select an image from the batch
+
+            if num_sample is not None:
+                assert num_sample < image_batch.shape[0], "num_sample must be less than the batch size"
+                assert num_sample >= 0, "num_sample must be greater than or equal to 0"
+                random_sample = num_sample
+            else:
+                random_sample = np.random.randint(0, image_batch.shape[0])  # Randomly select an image from the batch
 
             # Extract the selected image and label
             image = image_batch[random_sample]
