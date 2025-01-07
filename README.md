@@ -1,4 +1,4 @@
-#Anleitung
+# Anleitung
 
 Um trainingsergebnisse anzuschauen plot_results_1.ipynb, plot_results_2.ipynb ausführen.
 
