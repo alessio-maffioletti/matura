@@ -27,7 +27,8 @@ dataset2_folder = main_folder + 'dataset2' + '/'
 # In diesen Foldern werden Trainingsdaten gespeichert.
 
 # Schlussendlich kann main_script.ipynb ausgeführt
-## Achtung! die Datensatzerstellung braucht viel Arbeittspeicher, ich empfehle sicherzustellen, dass mindestens 12 GB freier Arbeitsspeicher vorhanden ist
+## Achtung! Die Datensatzerstellung braucht viel Arbeittspeicher, ich empfehle sicherzustellen, dass mindestens 12 GB freier Arbeitsspeicher vorhanden ist
+## Achtung! Das Training der Modelle erfordert ebenfalls viel Arbeitsspeicher. Falls nicht genug Arbeitsspeicher vorhanden ist, kann es sein, dass bei einigen Netzwerkstrukturen, der Code eine Errormeldung gibt. Es ist möglich diese zu ignorieren, ich empfehle jedoch in diesem Fall im constants.py, die Batch_Size auf einen tieferen Wert zu setzen.
 
 # Als Beispiel habe ich meine Folders als Bild eingefügt.
 ![alt text](Folders.png)
