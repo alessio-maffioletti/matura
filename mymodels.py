@@ -20,9 +20,9 @@ tf.random.set_seed(RANDOM_SEED)
 powershell_executable = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
 powershell_command = 'Get-ChildItem -Path "H:\\aless\\Documents\\Python_Scripts\\Matur\\matura-private-main\\logs" | Remove-Item -Recurse -Force'
 
-import tensorflow as tf
-import time
 
+
+# alle custom Callbacks inklusiv wrapper und print_trainable_params wurden mit ChatGPT generiert, aber ausführlich geprüft und verstanden
 class SingleLineProgressBar(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         if logs is None:
@@ -68,11 +68,10 @@ class StopAtMAE(Callback):
 class StopAtTime(Callback):
     def __init__(self, time_limit):
         super().__init__()
-        self.time_limit = time_limit  # Maximum allowable training time in seconds
+        self.time_limit = time_limit
         self.start_time = None
 
     def on_train_begin(self, logs=None):
-        # Record the start time of training
         self.start_time = time.time()
 
     def on_epoch_end(self, epoch, logs=None):
@@ -85,14 +84,13 @@ class StopAtTime(Callback):
 class BatchLoggingCallback(tf.keras.callbacks.Callback):
     def __init__(self):
         super().__init__()
-        self.history = {}  # Dynamically initialized from logs
-        self.batch = []  # Tracks batches
+        self.history = {}
+        self.batch = []
 
     def on_train_batch_end(self, batch, logs=None):
         logs = logs or {}
-        self.batch.append(len(self.batch))  # Track batch indices globally
+        self.batch.append(len(self.batch))
 
-        # Log training metrics
         for metric, value in logs.items():
             if metric not in self.history:
                 self.history[metric] = []
@@ -101,35 +99,16 @@ class BatchLoggingCallback(tf.keras.callbacks.Callback):
     def on_test_batch_end(self, batch, logs=None):
         logs = logs or {}
 
-        # Log validation metrics (prefixed with "val_" for clarity)
         for metric, value in logs.items():
             val_metric = f"val_{metric}"
             if val_metric not in self.history:
                 self.history[val_metric] = []
             self.history[val_metric].append(value)
 
-
-
 class BatchRunWrapper:
     def __init__(self, batch_logger):
         self.history = batch_logger.history
-        self.epoch = batch_logger.batch  # Mimic `epoch` with `batch`
-
-
-class BatchRunWrapperGG:
-    def __init__(self, epoch_run, batch_logger):
-        # Start with the batch history
-        self.history = batch_logger.history
-        self.epoch = batch_logger.batch  # Use batches for indexing
-        
-        # Add only missing validation metrics from epoch history
-        for metric, values in epoch_run.history.items():
-            if metric not in self.history:
-                self.history[metric] = values
-        
-        # Mimic epoch indexing for compatibility
-        #self.epoch = batch_logger.batch
-
+        self.epoch = batch_logger.batch 
 
 
 
@@ -139,45 +118,35 @@ def print_trainable_params(model, figsize=(2, 2), threshold=5):
     layer_params = []
     layer_colors = []
 
-    # Define base colors for Dense and Conv layers
-    dense_color = 'red'  # Red color for Dense layers
-    conv_color = 'blue'  # Blue color for Conv2D layers
+    dense_color = 'red'  
+    conv_color = 'blue'  
 
-    # Collect data for the layers and their parameters
     for idx, layer in enumerate(model.layers):
-        if layer.trainable and len(layer.trainable_weights) > 0:  # Ensure the layer has trainable weights
-            num_params = np.prod(layer.trainable_weights[0].shape)  # Number of parameters in the layer
+        if layer.trainable and len(layer.trainable_weights) > 0: 
+            num_params = np.prod(layer.trainable_weights[0].shape)  
             total_trainable_params += num_params
             layer_names.append(layer.name)
             layer_params.append(num_params)
 
-            # Assign colors based on layer type
             if isinstance(layer, tf.keras.layers.Dense):
-                # Dense layer (Red)
                 color = dense_color
             elif isinstance(layer, tf.keras.layers.Conv2D):
-                # Conv layer (Blue)
                 color = conv_color
             else:
-                # Default color if it's neither Dense nor Conv
-                color = 'gray'  # Gray for other layers
+                color = 'gray'  
 
             layer_colors.append(color)
 
-    # Create a pie chart with adjustable figsize
-    fig, ax = plt.subplots(figsize=figsize)  # Create a figure with the specified figsize
+    fig, ax = plt.subplots(figsize=figsize)  
     
-    # Custom function to conditionally show percentages
     def percentage_label(x):
-        return f"{x:.0f}%" if x > threshold else ""  # Only show percentage if greater than threshold
+        return f"{x:.0f}%" if x > threshold else ""  
 
-    # Create the pie chart with black edges
     wedges, texts, autotexts = ax.pie(layer_params, autopct=lambda p: percentage_label(p), startangle=140,
-                                      colors=layer_colors, wedgeprops={'edgecolor': 'black'})  # Black line between slices
+                                      colors=layer_colors, wedgeprops={'edgecolor': 'black'})  
     ax.set_title(f"Total: {total_trainable_params:,} params")
-    ax.axis('equal')  # Equal aspect ratio ensures that pie chart is drawn as a circle.
+    ax.axis('equal')  
 
-    # Show the plot
     plt.show()
 
     total_trainable_params = int(total_trainable_params)
@@ -185,7 +154,6 @@ def print_trainable_params(model, figsize=(2, 2), threshold=5):
     return total_trainable_params
 
 def _set_initial_params(initial_params):
-        # Define default parameters
         default_params = {
             'flatten_type': 'flatten',
             'conv_layers': [32, 64],
@@ -196,17 +164,16 @@ def _set_initial_params(initial_params):
             'dropout': 0.01
             }
 
-        # If initial_params is None, use the default parameters
         if initial_params is None:
             initial_params = default_params
         else:
-            # Otherwise, fill missing keys with the default value
             for key, value in default_params.items():
                 initial_params.setdefault(key, value)
 
         return initial_params
 
 
+# alle diese Modelle nutzen eine Struktur, welche aus Codebeispielen von einem Machine-Learning Kurs aus der ETH. Die Codes vom Workshop sind in der MA angehängt
 
 class ClassificationModel:
     def __init__(self, input_shape, output_shape, activation, trainable_params=None):
@@ -252,7 +219,6 @@ class ClassificationModel:
         return trainable_params
     
     def train(self, train_dataset, val_dataset, metric, params, checkpoints_folder=None):
-        # Default parameters
         default_params = {
             'epochs': 10,
             'tensorboard': False,
@@ -267,7 +233,6 @@ class ClassificationModel:
             'batch_plot': True
             }
         
-        # Merge provided params with defaults
         if not params:
             params = default_params
         else:
@@ -275,8 +240,6 @@ class ClassificationModel:
                 params.setdefault(key, value)
 
         
-        # Initialize callbacks
-
         callbacks = []
         if params['show_progress']:
             callbacks.append(SingleLineProgressBar())
@@ -289,15 +252,14 @@ class ClassificationModel:
             if not params['weights']:
                 subprocess.run(
                     [powershell_executable, '-Command', powershell_command],
-                    stdout=subprocess.DEVNULL,  # Suppress standard output
-                    stderr=subprocess.DEVNULL   # Suppress error output
+                    stdout=subprocess.DEVNULL,  
+                    stderr=subprocess.DEVNULL   
                 )
             
             tensorboard_callback = TensorBoard(log_dir=LOGS_FOLDER)
             callbacks.append(tensorboard_callback)
 
         if params['cp_callback']:
-            # Create a callback for saving model weights
             cp_callback = tf.keras.callbacks.ModelCheckpoint(
                 filepath=os.path.join(checkpoints_folder, f"{self.name}{params['weight_string']}{{epoch:02d}}.weights.h5"),
                 save_weights_only=True,
@@ -328,7 +290,6 @@ class ClassificationModel:
             batch_log_callback = BatchLoggingCallback()
             callbacks.append(batch_log_callback)
 
-        # Train the model
         model_run = self.model.fit(
             train_dataset,
             epochs=params['epochs'],
@@ -383,7 +344,6 @@ class SingleModel(ClassificationModel):
 
         initializer = tf.keras.initializers.GlorotUniform(seed=RANDOM_SEED)
 
-        # Image Input branch
         image_input = layers.Input(shape=INPUT_SHAPE, name='image')
         x = image_input
 
@@ -394,26 +354,20 @@ class SingleModel(ClassificationModel):
         #x = layers.Flatten()(x)
         x = layers.GlobalAveragePooling2D()(x)
 
-        # Coordinates Input branch
         coordinates_input = layers.Input(shape=COORDS_SHAPE, name='coords')
         y = coordinates_input
-        y = layers.Dense(64, activation='relu')(y)  # Example dense layer for coords input
-
-        # Merge the two branches
+        y = layers.Dense(64, activation='relu')(y)  
         combined = layers.Concatenate()([x, y])
 
-        # Fully connected layers after concatenation
         z = combined
         for dense_layer in self.trainable_params['dense_layers']:
             z = layers.Dense(dense_layer, activation='relu', kernel_initializer=initializer)(z)
-            z = layers.Dropout(self.trainable_params['dropout'], seed=RANDOM_SEED)(z)  # Example dropout layer
+            z = layers.Dropout(self.trainable_params['dropout'], seed=RANDOM_SEED)(z)  
 
         output = layers.Dense(LABELS_OUTPUT_SHAPE, activation=CLASSIFICATION_ACTIVATION, name='label')(z)
 
-        # Define the model
         self.model = models.Model(inputs=[image_input, coordinates_input], outputs=output)
 
-        # Print model summary
         #print(self.model.summary())
 
     

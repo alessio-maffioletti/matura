@@ -116,6 +116,7 @@ class Optimizer:
         self.plot_results(trainable_params_list, training_time_list, iteration_list)
         return best_conv, best_dense, iter_num
     
+# die Klasse BayesianOptimizer wurde sehr simplifiziert mit ChatGPT generiert, um die richtige Struktur zu haben. Danach wurde auf diesem Code aufgebaut
 
 class BayesianOptimizer:
     def __init__(self, starting_values=None, direction='minimize'):
@@ -125,7 +126,6 @@ class BayesianOptimizer:
         self.best_time = MAX_TRAIN_TIME
 
     def _set_initial_params(self, initial_params, default_direction='min'):
-        # Define default parameters
         default_params_max = {
             'min_conv_layers': 1,
             'max_conv_layers': 5,
@@ -166,11 +166,9 @@ class BayesianOptimizer:
         else:
             raise ValueError("Default direction must be 'max' or 'min'")
 
-        # If initial_params is None, use the default parameters
         if initial_params is None:
             initial_params = default_params
         else:
-            # Otherwise, fill missing keys with the default value
             for key, value in default_params.items():
                 initial_params.setdefault(key, value)
 
@@ -182,14 +180,12 @@ class BayesianOptimizer:
 
         return trial_params
     def write(self, trial_params, training_time, trial_number):
-        # Create a dictionary for the new trial
         trial_data = {
             "training_time": training_time,
             'trial_number': trial_number,
             "params": trial_params
         }
         
-        # Try to read the existing file, or create an empty list if it doesn't exist
         try:
             with open(OPTIMIZER_FOLDER + "trials.json", "r") as file:
                 trials = json.load(file)
@@ -197,13 +193,10 @@ class BayesianOptimizer:
         except (FileNotFoundError, json.JSONDecodeError):
             trials = []
 
-        # Append the new trial data
         trials.append(trial_data)
 
-        # Sort trials by training time (ascending order)
         trials_sorted = sorted(trials, key=lambda x: x['training_time'])
 
-        # Write the sorted trials back to the JSON file
         with open(OPTIMIZER_FOLDER + "trials.json", "w") as file:
             json.dump(trials_sorted, file, indent=4)
             file.close()
