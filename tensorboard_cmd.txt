@@ -1,8 +1,0 @@
-launch command; launch in anaconda powershell 
-set logdir to path to logs folder
-python C:\Users\aless\anaconda3\Lib\site-packages\tensorboard\main.py --logdir=H:\aless\Documents\Python_Scripts\Matur\matura-private-main\logs
-
-url: http://localhost:6006/
-
-remove files
-Get-ChildItem -Path "H:\aless\Documents\Python_Scripts\Matur\matura-private-main\logs" | Remove-Item -Recurse -Force
