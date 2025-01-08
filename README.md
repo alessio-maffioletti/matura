@@ -30,5 +30,7 @@ dataset2_folder = main_folder + 'dataset2' + '/'
 ## Achtung! Die Datensatzerstellung braucht viel Arbeittspeicher, ich empfehle sicherzustellen, dass mindestens 12 GB freier Arbeitsspeicher vorhanden ist
 ## Achtung! Das Training der Modelle erfordert ebenfalls viel Arbeitsspeicher. Falls nicht genug Arbeitsspeicher vorhanden ist, kann es sein, dass bei einigen Netzwerkstrukturen, der Code eine Errormeldung gibt. Es ist möglich diese zu ignorieren, ich empfehle jedoch in diesem Fall im constants.py, die Batch_Size auf einen tieferen Wert zu setzen.
 
+Jede Zelle in main_script.ipynb optimiert ein neues Modell oder generiert einen Datensatz. Falls ein Datensatz generiert wird, immer die Ordner leeren vor dem Generieren. Falls ein Modell trainiert wird, den entsprechenden chechpoint-Folder leeren und den optimizer-Folder auch.
+
 # Als Beispiel habe ich meine Folders als Bild eingefügt.
 ![alt text](Folders.png)
