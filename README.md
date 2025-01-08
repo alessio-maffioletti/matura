@@ -1,6 +1,7 @@
 # Anleitung
 
 # Um trainingsergebnisse anzuschauen plot_results_1.ipynb, plot_results_2.ipynb ausführen.
+## Achtung! plot_results_1&2.ipynb, können nur ausgeführt werden, falls die Datensatz-Folders, Datensätze enthalten.
 
 # Um den Versuch nachzumachen, im constants.py File, folgende variabeln setzen:
 
